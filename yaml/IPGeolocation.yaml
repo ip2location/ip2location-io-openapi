@@ -1,0 +1,507 @@
+openapi: 3.0.3
+info:
+  title: IP2Location.io IP Geolocation API
+  description: IP2Location.io IP Geolocation API provides RESTful API to obtain visitors’ geolocation information such as country, region, city, latitude & longitude, ZIP code, time zone, ASN, ISP, domain, net speed, IDD code, area code, weather station data, MNC, MCC, mobile brand, elevation, usage type, address type, advertisement category and proxy data with an IP address. Supports both IPv4 and IPv6 address lookup.
+  version: 1
+  contact: 
+    name: IP2Location.io
+    url: https://github.com/ip2location/ip2location-io-openapi
+servers:
+  - url: https://api.ip2location.io
+paths:
+  /:
+    get:
+      summary: IP Geolocation
+      description: Geolocate user's location information via IP address
+      operationId: ipGeolocation
+      parameters:
+        - name: key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: (required) IP2Location.io API key.
+        - name: ip
+          in: query
+          required: true
+          schema:
+            type: string
+            example: 8.8.8.8
+          description: (required) IP address (IPv4 or IPv6) for reverse IP location lookup
+            purposes. If not present, the server IP address will be used for the
+            location lookup.
+        - name: format
+          in: query
+          schema:
+            enum:
+              - json
+              - xml
+            type: string
+          description: "(optional) Format of the response message. Default is json."
+        - name: lang
+          in: query
+          schema:
+            enum:
+              - ar
+              - cs
+              - da
+              - de
+              - en
+              - es
+              - et
+              - fi
+              - fr
+              - ga
+              - it
+              - ja
+              - ko
+              - ms
+              - nl
+              - pt
+              - ru
+              - sv
+              - tr
+              - vi
+              - zh-cn
+              - zh-tw
+            type: string
+          description: "(optional) Translation information(ISO639-1). The translation is only applicable for continent, country, region and city name. Note: This parameter is only available for Plus and Security plan only."
+      responses:
+        "200":
+          description: Get response from IP lookup
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  address_type:
+                    type: string
+                    example: Anycast
+                  ads_category:
+                    type: string
+                    example: IAB19-11
+                  ads_category_name:
+                    type: string
+                    example: Data Centers
+                  area_code:
+                    type: string
+                    example: "650"
+                  as:
+                    type: string
+                    example: Google LLC
+                  as_info:
+                    type: object
+                    properties:
+                      as_cidr:
+                        type: string
+                        example: 8.8.8.0/24
+                      as_domain:
+                        type: string
+                        example: google.com
+                      as_name:
+                        type: string
+                        example: Google LLC
+                      as_number:
+                        type: string
+                        example: "15169"
+                      as_usage_type:
+                        type: string
+                        example: DCH
+                  asn:
+                    type: string
+                    example: "15169"
+                  city:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: Mountain View
+                      translation:
+                        type: object
+                        properties:
+                          lang:
+                            nullable: true
+                            example: null
+                          value:
+                            nullable: true
+                            example: null
+                  city_name:
+                    type: string
+                    example: Mountain View
+                  continent:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: NA
+                      hemisphere:
+                        type: array
+                        items:
+                          type: string
+                          example: north
+                        example:
+                          - north
+                          - west
+                      name:
+                        type: string
+                        example: North America
+                      translation:
+                        type: object
+                        properties:
+                          lang:
+                            nullable: true
+                            example: null
+                          value:
+                            nullable: true
+                            example: null
+                  country:
+                    type: object
+                    properties:
+                      alpha3_code:
+                        type: string
+                        example: USA
+                      capital:
+                        type: string
+                        example: Washington, D.C.
+                      currency:
+                        type: object
+                        properties:
+                          code:
+                            type: string
+                            example: USD
+                          name:
+                            type: string
+                            example: United States Dollar
+                          symbol:
+                            type: string
+                            example: $
+                      demonym:
+                        type: string
+                        example: Americans
+                      flag:
+                        type: string
+                        example: https://cdn.ip2location.io/assets/img/flags/us.png
+                      language:
+                        type: object
+                        properties:
+                          code:
+                            type: string
+                            example: EN
+                          name:
+                            type: string
+                            example: English
+                      name:
+                        type: string
+                        example: United States of America
+                      numeric_code:
+                        type: number
+                        example: 840
+                      population:
+                        type: number
+                        example: 339665118
+                      tld:
+                        type: string
+                        example: us
+                      total_area:
+                        type: number
+                        example: 9826675
+                      translation:
+                        type: object
+                        properties:
+                          lang:
+                            nullable: true
+                            example: null
+                          value:
+                            nullable: true
+                            example: null
+                  country_code:
+                    type: string
+                    example: US
+                  country_name:
+                    type: string
+                    example: United States of America
+                  district:
+                    type: string
+                    example: Santa Clara County
+                  domain:
+                    type: string
+                    example: google.com
+                  elevation:
+                    type: number
+                    example: 32
+                  fraud_score:
+                    type: number
+                    example: 0
+                  geotargeting:
+                    type: object
+                    properties:
+                      metro:
+                        type: string
+                        example: "807"
+                  idd_code:
+                    type: string
+                    example: "1"
+                  ip:
+                    type: string
+                    example: 8.8.8.8
+                  is_proxy:
+                    type: boolean
+                    example: false
+                  isp:
+                    type: string
+                    example: Google LLC
+                  latitude:
+                    type: number
+                    example: 37.38605
+                  longitude:
+                    type: number
+                    example: -122.08385
+                  mcc:
+                    type: string
+                    example: "-"
+                  mnc:
+                    type: string
+                    example: "-"
+                  mobile_brand:
+                    type: string
+                    example: "-"
+                  net_speed:
+                    type: string
+                    example: T1
+                  proxy:
+                    type: object
+                    properties:
+                      is_bogon:
+                        type: boolean
+                        example: false
+                      is_botnet:
+                        type: boolean
+                        example: false
+                      is_consumer_privacy_network:
+                        type: boolean
+                        example: false
+                      is_data_center:
+                        type: boolean
+                        example: true
+                      is_enterprise_private_network:
+                        type: boolean
+                        example: false
+                      is_public_proxy:
+                        type: boolean
+                        example: false
+                      is_residential_proxy:
+                        type: boolean
+                        example: false
+                      is_scanner:
+                        type: boolean
+                        example: false
+                      is_spammer:
+                        type: boolean
+                        example: false
+                      is_tor:
+                        type: boolean
+                        example: false
+                      is_vpn:
+                        type: boolean
+                        example: false
+                      is_web_crawler:
+                        type: boolean
+                        example: false
+                      is_web_proxy:
+                        type: boolean
+                        example: false
+                      last_seen:
+                        type: number
+                        example: 1
+                      provider:
+                        type: string
+                        example: "-"
+                      proxy_type:
+                        type: string
+                        example: DCH
+                      threat:
+                        type: string
+                        example: "-"
+                  region:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: US-CA
+                      name:
+                        type: string
+                        example: California
+                      translation:
+                        type: object
+                        properties:
+                          lang:
+                            nullable: true
+                            example: null
+                          value:
+                            nullable: true
+                            example: null
+                  region_name:
+                    type: string
+                    example: California
+                  time_zone:
+                    type: string
+                    example: -07:00
+                  time_zone_info:
+                    type: object
+                    properties:
+                      abbreviation:
+                        type: string
+                        example: PDT
+                      current_time:
+                        type: string
+                        example: 2025-10-06T18:57:42-07:00
+                      dst_end_date:
+                        type: string
+                        example: 2025-11-02
+                      dst_start_date:
+                        type: string
+                        example: 2025-03-09
+                      gmt_offset:
+                        type: number
+                        example: -25200
+                      is_dst:
+                        type: boolean
+                        example: true
+                      olson:
+                        type: string
+                        example: America/Los_Angeles
+                      sunrise:
+                        type: string
+                        example: 07:08
+                      sunset:
+                        type: string
+                        example: 18:43
+                  usage_type:
+                    type: string
+                    example: DCH
+                  weather_station_code:
+                    type: string
+                    example: USCA0746
+                  weather_station_name:
+                    type: string
+                    example: Mountain View
+                  zip_code:
+                    type: string
+                    example: "94035"
+              examples:
+                IP Geolocation:
+                  value:
+                    address_type: Anycast
+                    ads_category: IAB19-11
+                    ads_category_name: Data Centers
+                    area_code: "650"
+                    as: Google LLC
+                    as_info:
+                      as_cidr: 8.8.8.0/24
+                      as_domain: google.com
+                      as_name: Google LLC
+                      as_number: "15169"
+                      as_usage_type: DCH
+                    asn: "15169"
+                    city:
+                      name: Mountain View
+                      translation:
+                        lang: null
+                        value: null
+                    city_name: Mountain View
+                    continent:
+                      code: NA
+                      hemisphere:
+                        - north
+                        - west
+                      name: North America
+                      translation:
+                        lang: null
+                        value: null
+                    country:
+                      alpha3_code: USA
+                      capital: Washington, D.C.
+                      currency:
+                        code: USD
+                        name: United States Dollar
+                        symbol: $
+                      demonym: Americans
+                      flag: https://cdn.ip2location.io/assets/img/flags/us.png
+                      language:
+                        code: EN
+                        name: English
+                      name: United States of America
+                      numeric_code: 840
+                      population: 339665118
+                      tld: us
+                      total_area: 9826675
+                      translation:
+                        lang: null
+                        value: null
+                    country_code: US
+                    country_name: United States of America
+                    district: Santa Clara County
+                    domain: google.com
+                    elevation: 32
+                    fraud_score: 0
+                    geotargeting:
+                      metro: "807"
+                    idd_code: "1"
+                    ip: 8.8.8.8
+                    is_proxy: false
+                    isp: Google LLC
+                    latitude: 37.38605
+                    longitude: -122.08385
+                    mcc: "-"
+                    mnc: "-"
+                    mobile_brand: "-"
+                    net_speed: T1
+                    proxy:
+                      is_bogon: false
+                      is_botnet: false
+                      is_consumer_privacy_network: false
+                      is_data_center: true
+                      is_enterprise_private_network: false
+                      is_public_proxy: false
+                      is_residential_proxy: false
+                      is_scanner: false
+                      is_spammer: false
+                      is_tor: false
+                      is_vpn: false
+                      is_web_crawler: false
+                      is_web_proxy: false
+                      last_seen: 1
+                      provider: "-"
+                      proxy_type: DCH
+                      threat: "-"
+                    region:
+                      code: US-CA
+                      name: California
+                      translation:
+                        lang: null
+                        value: null
+                    region_name: California
+                    time_zone: -07:00
+                    time_zone_info:
+                      abbreviation: PDT
+                      current_time: 2025-10-06T18:57:42-07:00
+                      dst_end_date: 2025-11-02
+                      dst_start_date: 2025-03-09
+                      gmt_offset: -25200
+                      is_dst: true
+                      olson: America/Los_Angeles
+                      sunrise: 07:08
+                      sunset: 18:43
+                    usage_type: DCH
+                    weather_station_code: USCA0746
+                    weather_station_name: Mountain View
+                    zip_code: "94035"
+      security:
+        - apiKey: []
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      name: Authorization
+      in: query
+

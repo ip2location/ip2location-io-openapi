@@ -1,0 +1,152 @@
+openapi: 3.0.3
+info:
+  title: IP2Location.io Bulk IP Geolocation API
+  description: IP2Location.io Bulk IP Geolocation API allows users to check IP address location in bulk. This API supports up to 1000 IPv4 and IPv6 addresses per query.
+  version: 1
+  contact: 
+    name: IP2Location.io
+    url: https://github.com/ip2location/ip2location-io-openapi
+servers:
+  - url: https://bulk.ip2location.io
+paths:
+  /:
+    post:
+      summary: Bulk IP Geolocation API
+      description: Geolocate IP address location in bulk. Supports up to 1000 IP addresses per query.
+      operationId: bulkIpGeolocationApi
+      parameters:
+        - name: key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: (required) IP2Location.io API key.
+        - name: format
+          in: query
+          schema:
+            enum:
+              - json
+              - csv
+            type: string
+          description: (optional) Format of the response message. If unspecified, json format will be used for the response message.
+        - name: fields
+          in: query
+          schema:
+            type: string
+          description: (optional) Custom fields returned by the API endpoint. You can specify multiple fields by separating them with comma (,). If unspecified, all fields will be returned. Valid value: country_code | country_name | region_name | city_name | latitude | longitude | zip_code | time_zone | asn | as | is_proxy
+      requestBody:
+        description: (required) A list of IP address separated by new line or JSON encoded IP list.
+        required: true
+        content:
+          text/plain:
+            examples:
+              Bulk IP Geolocation API:
+                value: "8.8.8.8\n9.9.9.9"
+      responses:
+        "200":
+          description: Get response from bulk IP lookup
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  8.8.8.8:
+                    type: object
+                    properties:
+                      as:
+                        type: string
+                        example: Google LLC
+                      asn:
+                        type: string
+                        example: "15169"
+                      city_name:
+                        type: string
+                        example: Mountain View
+                      country_code:
+                        type: string
+                        example: US
+                      country_name:
+                        type: string
+                        example: United States of America
+                      is_proxy:
+                        type: boolean
+                        example: false
+                      latitude:
+                        type: number
+                        example: 37.38605
+                      longitude:
+                        type: number
+                        example: -122.08385
+                      region_name:
+                        type: string
+                        example: California
+                      time_zone:
+                        type: string
+                        example: google.com
+                      zip_code:
+                        type: string
+                        example: "94035"
+                  9.9.9.9:
+                    type: object
+                    properties:
+                      as:
+                        type: string
+                        example: QUAD9
+                      asn:
+                        type: string
+                        example: "19281"
+                      city_name:
+                        type: string
+                        example: Berkeley
+                      country_code:
+                        type: string
+                        example: US
+                      country_name:
+                        type: string
+                        example: United States of America
+                      is_proxy:
+                        type: boolean
+                        example: false
+                      latitude:
+                        type: number
+                        example: 37.87159
+                      longitude:
+                        type: number
+                        example: -122.27275
+                      region_name:
+                        type: string
+                        example: California
+                      time_zone:
+                        type: string
+                        example: quad9.net
+                      zip_code:
+                        type: string
+                        example: "94709"
+              examples:
+                Bulk IP Geolocation API:
+                  value:
+                    8.8.8.8:
+                      as: Google LLC
+                      asn: "15169"
+                      city_name: Mountain View
+                      country_code: US
+                      country_name: United States of America
+                      is_proxy: false
+                      latitude: 37.38605
+                      longitude: -122.08385
+                      region_name: California
+                      time_zone: google.com
+                      zip_code: "94035"
+                    9.9.9.9:
+                      as: QUAD9
+                      asn: "19281"
+                      city_name: Berkeley
+                      country_code: US
+                      country_name: United States of America
+                      is_proxy: false
+                      latitude: 37.87159
+                      longitude: -122.27275
+                      region_name: California
+                      time_zone: quad9.net
+                      zip_code: "94709"
+
