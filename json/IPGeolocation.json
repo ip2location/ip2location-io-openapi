@@ -413,6 +413,10 @@
                           "type": "boolean",
                           "example": false
                         },
+                        "is_ai_crawler": {
+                          "type": "boolean",
+                          "example": false
+                        },
                         "is_web_proxy": {
                           "type": "boolean",
                           "example": false
@@ -620,6 +624,7 @@
                         "is_tor": false,
                         "is_vpn": false,
                         "is_web_crawler": false,
+                        "is_ai_crawler": false,
                         "is_web_proxy": false,
                         "last_seen": 1,
                         "provider": "-",

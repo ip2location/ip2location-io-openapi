@@ -304,6 +304,9 @@ paths:
                       is_vpn:
                         type: boolean
                         example: false
+                      is_ai_crawler:
+                        type: boolean
+                        example: false
                       is_web_crawler:
                         type: boolean
                         example: false
@@ -468,6 +471,7 @@ paths:
                       is_spammer: false
                       is_tor: false
                       is_vpn: false
+                      is_ai_crawler: false
                       is_web_crawler: false
                       is_web_proxy: false
                       last_seen: 1
