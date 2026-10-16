@@ -1,0 +1,294 @@
+openapi: 3.0.3
+info:
+  title: IP2WHOIS Domain WHOIS API
+  description: IP2WHOIS Domain WHOIS API helps users to obtain domain information and WHOIS record by using a domain name. The WHOIS API returns a comprehensive WHOIS data such as creation date, updated date, expiration date, domain age, the contact information of the registrant, mailing address, phone number, email address, nameservers the domain is using and much more.
+  version: 1
+  contact: 
+    name: IP2Location.io
+    url: https://github.com/ip2location/ip2location-io-openapi
+servers:
+  - url: https://api.ip2whois.com/v2
+paths:
+  /:
+    get:
+      summary: Domain WHOIS
+      description: Check WHOIS information for a particular domain
+      operationId: domainWHOIS
+      parameters:
+        - name: key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: (required) IP2Location.io API key.
+        - name: domain
+          in: query
+          required: true
+          schema:
+            type: string
+            example: locaproxy.com
+          description: (required) Domain name.
+        - name: format
+          in: query
+          schema:
+            enum:
+              - json
+              - xml
+            type: string
+            default: json
+          description: "(optional) Format of the response message. Default is json."
+      responses:
+        "200":
+          description: Get response from domain WHOIS
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  admin:
+                    type: object
+                    properties:
+                      city:
+                        type: string
+                        example: Tempe
+                      country:
+                        type: string
+                        example: US
+                      email:
+                        type: string
+                        example: Select Contact Domain Holder link at https://www.godaddy.com/whois/results.aspx?domain=LOCAPROXY.COM
+                      fax:
+                        type: string
+                        example: "+1.4806242598"
+                      name:
+                        type: string
+                        example: Registration Private
+                      organization:
+                        type: string
+                        example: Domains By Proxy, LLC
+                      phone:
+                        type: string
+                        example: "+1.4806242599"
+                      region:
+                        type: string
+                        example: Arizona
+                      street_address:
+                        type: string
+                        example: DomainsByProxy.com
+                      zip_code:
+                        type: string
+                        example: "85284"
+                  billing:
+                    type: object
+                    properties:
+                      city:
+                        type: string
+                        example: Tempe
+                      country:
+                        type: string
+                        example: US
+                      email:
+                        type: string
+                        example: Select Contact Domain Holder link at https://www.godaddy.com/whois/results.aspx?domain=LOCAPROXY.COM
+                      fax:
+                        type: string
+                        example: "+1.4806242598"
+                      name:
+                        type: string
+                        example: Registration Private
+                      organization:
+                        type: string
+                        example: Domains By Proxy, LLC
+                      phone:
+                        type: string
+                        example: "+1.4806242599"
+                      region:
+                        type: string
+                        example: Arizona
+                      street_address:
+                        type: string
+                        example: DomainsByProxy.com
+                      zip_code:
+                        type: string
+                        example: "85284"
+                  create_date:
+                    type: string
+                    example: 2012-04-03T02:34:32Z
+                  domain:
+                    type: string
+                    example: locaproxy.com
+                  domain_age:
+                    type: number
+                    example: 3863
+                  domain_id:
+                    type: string
+                    example: 1710914405_DOMAIN_COM-VRSN
+                  expire_date:
+                    type: string
+                    example: 2024-04-03T02:34:32Z
+                  nameservers:
+                    type: array
+                    items:
+                      type: string
+                      example: vera.ns.cloudflare.com
+                    example:
+                      - vera.ns.cloudflare.com
+                      - walt.ns.cloudflare.com
+                  registrant:
+                    type: object
+                    properties:
+                      city:
+                        type: string
+                        example: Tempe
+                      country:
+                        type: string
+                        example: US
+                      email:
+                        type: string
+                        example: Select Contact Domain Holder link at https://www.godaddy.com/whois/results.aspx?domain=LOCAPROXY.COM
+                      fax:
+                        type: string
+                        example: "+1.4806242598"
+                      name:
+                        type: string
+                        example: Registration Private
+                      organization:
+                        type: string
+                        example: Domains By Proxy, LLC
+                      phone:
+                        type: string
+                        example: "+1.4806242599"
+                      region:
+                        type: string
+                        example: Arizona
+                      street_address:
+                        type: string
+                        example: DomainsByProxy.com
+                      zip_code:
+                        type: string
+                        example: "85284"
+                  registrar:
+                    type: object
+                    properties:
+                      iana_id:
+                        type: string
+                        example: "146"
+                      name:
+                        type: string
+                        example: GoDaddy.com, LLC
+                      url:
+                        type: string
+                        example: https://www.godaddy.com
+                  status:
+                    type: string
+                    example: clientTransferProhibited https://icann.org/epp#clientTransferProhibited
+                  tech:
+                    type: object
+                    properties:
+                      city:
+                        type: string
+                        example: Tempe
+                      country:
+                        type: string
+                        example: US
+                      email:
+                        type: string
+                        example: Select Contact Domain Holder link at https://www.godaddy.com/whois/results.aspx?domain=LOCAPROXY.COM
+                      fax:
+                        type: string
+                        example: "+1.4806242598"
+                      name:
+                        type: string
+                        example: Registration Private
+                      organization:
+                        type: string
+                        example: Domains By Proxy, LLC
+                      phone:
+                        type: string
+                        example: "+1.4806242599"
+                      region:
+                        type: string
+                        example: Arizona
+                      street_address:
+                        type: string
+                        example: DomainsByProxy.com
+                      zip_code:
+                        type: string
+                        example: "85284"
+                  update_date:
+                    type: string
+                    example: 2021-12-03T02:54:57Z
+                  whois_server:
+                    type: string
+                    example: whois.godaddy.com
+              examples:
+                Domain WHOIS:
+                  value:
+                    admin:
+                      city: Tempe
+                      country: US
+                      email: Select Contact Domain Holder link at https://www.godaddy.com/whois/results.aspx?domain=LOCAPROXY.COM
+                      fax: "+1.4806242598"
+                      name: Registration Private
+                      organization: Domains By Proxy, LLC
+                      phone: "+1.4806242599"
+                      region: Arizona
+                      street_address: DomainsByProxy.com
+                      zip_code: "85284"
+                    billing:
+                      city: ""
+                      country: ""
+                      email: ""
+                      fax: ""
+                      name: ""
+                      organization: ""
+                      phone: ""
+                      region: ""
+                      street_address: ""
+                      zip_code: ""
+                    create_date: 2012-04-03T02:34:32Z
+                    domain: locaproxy.com
+                    domain_age: 3863
+                    domain_id: 1710914405_DOMAIN_COM-VRSN
+                    expire_date: 2024-04-03T02:34:32Z
+                    nameservers: 
+                      - vera.ns.cloudflare.com
+                      - walt.ns.cloudflare.com
+                    registrant:
+                      city: Tempe
+                      country: US
+                      email: Select Contact Domain Holder link at https://www.godaddy.com/whois/results.aspx?domain=LOCAPROXY.COM
+                      fax: "+1.4806242598"
+                      name: Registration Private
+                      organization: Domains By Proxy, LLC
+                      phone: "+1.4806242599"
+                      region: Arizona
+                      street_address: DomainsByProxy.com
+                      zip_code: "85284"
+                    registrar:
+                      iana_id: "146"
+                      name: GoDaddy.com, LLC
+                      url: https://www.godaddy.com
+                    status: clientTransferProhibited https://icann.org/epp#clientTransferProhibited
+                    tech:
+                      city: Tempe
+                      country: US
+                      email: Select Contact Domain Holder link at https://www.godaddy.com/whois/results.aspx?domain=LOCAPROXY.COM
+                      fax: "+1.4806242598"
+                      name: Registration Private
+                      organization: Domains By Proxy, LLC
+                      phone: "+1.4806242599"
+                      region: Arizona
+                      street_address: DomainsByProxy.com
+                      zip_code: "85284"
+                    update_date: 2021-12-03T02:54:57Z
+                    whois_server: whois.godaddy.com
+      security:
+        - apiKey: []
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      name: Authorization
+      in: query
+

@@ -1,0 +1,97 @@
+openapi: 3.0.3
+info:
+  title: IP2WHOIS Hosted Domain API
+  description: Hosted Domain API allowing users to get the list of hosted domain names by IP address in real time. The REST API supports both IPv4 and IPv6 address lookup
+  version: 1
+  contact: 
+    name: IP2Location.io
+    url: https://github.com/ip2location/ip2location-io-openapi
+servers:
+  - url: https://domains.ip2whois.com/domains
+paths:
+  /:
+    get:
+      summary: Hosted Domain
+      description: Get list of hosted domain names by IP address
+      operationId: hostedDomain
+      parameters:
+        - name: key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: (required) IP2Location.io API key.
+        - name: ip
+          in: query
+          required: true
+          schema:
+            type: string
+            example: 8.8.8.8
+          description: (required) IP address (IPv4 or IPv6) for hosted domain lookup purposes.
+        - name: format
+          in: query
+          schema:
+            enum:
+              - json
+              - xml
+            type: string
+            default: json
+          description: "(optional) Format of the response message. Default is json."
+        - name: page
+          in: query
+          schema:
+            type: number
+            example: 1
+          description: (optional) Pagination result returns of the hosted domains. If unspecified, 1st page will be used.
+      responses:
+        "200":
+          description: Get response from hosted domain
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  domains:
+                    type: array
+                    items:
+                      type: string
+                      example: 000180.top
+                    example:
+                      - 000180.top
+                      - 00100tet.xyz
+                  ip:
+                    type: string
+                    example: 8.8.8.8
+                  page:
+                    type: number
+                    example: 1
+                  per_page:
+                    type: number
+                    example: 100
+                  total_domains:
+                    type: number
+                    example: 3857
+                  total_pages:
+                    type: number
+                    example: 39
+              examples:
+                Hosted Domain:
+                  value:
+                    domains: 
+                      - 000180.top
+                      - 00100tet.xyz
+                      - 001hash.vip
+                    ip: 8.8.8.8
+                    page: 1
+                    per_page: 100
+                    total_domains: 3857
+                    total_pages: 39
+      security:
+        - apiKey: []
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      name: Authorization
+      in: query
+
