@@ -1,6 +1,7 @@
-openapi: 3.0.3
+openapi: 3.2.1
 info:
   title: IP2WHOIS Domain WHOIS API
+  summary: Domain WHOIS
   description: |-
     IP2WHOIS Domain WHOIS API returns registration and contact data for a domain name: creation, update and expiry dates, domain age, registrar, registrant, administrative, technical and billing contacts, nameservers and WHOIS server.
 
@@ -43,7 +44,8 @@ paths:
           schema:
             type: string
             format: hostname
-            example: locaproxy.com
+            examples:
+              - locaproxy.com
           description: Domain name to look up.
         - $ref: '#/components/parameters/format_json_xml'
       responses:
@@ -235,11 +237,13 @@ components:
             error_code:
               type: integer
               description: Numeric error code, unique within the API.
-              example: 10001
+              examples:
+                - 10001
             error_message:
               type: string
               description: Human-readable error message.
-              example: Invalid IP address.
+              examples:
+                - Invalid IP address.
     Contact:
       type: object
       description: WHOIS contact details. Fields are omitted or empty when the registry redacts them.
@@ -247,43 +251,53 @@ components:
         name:
           type: string
           description: Contact name.
-          example: Registration Private
+          examples:
+            - Registration Private
         organization:
           type: string
           description: Contact organisation.
-          example: Domains By Proxy, LLC
+          examples:
+            - Domains By Proxy, LLC
         street_address:
           type: string
           description: Street address.
-          example: DomainsByProxy.com
+          examples:
+            - DomainsByProxy.com
         city:
           type: string
           description: City.
-          example: Tempe
+          examples:
+            - Tempe
         region:
           type: string
           description: Region or state.
-          example: Arizona
+          examples:
+            - Arizona
         zip_code:
           type: string
           description: ZIP or postal code.
-          example: '85284'
+          examples:
+            - '85284'
         country:
           type: string
           description: Country code.
-          example: US
+          examples:
+            - US
         phone:
           type: string
           description: Phone number.
-          example: '+1.4806242599'
+          examples:
+            - '+1.4806242599'
         fax:
           type: string
           description: Fax number.
-          example: '+1.4806242598'
+          examples:
+            - '+1.4806242598'
         email:
           type: string
           description: Email address.
-          example: Select Contact Domain Holder link at https://www.godaddy.com/whois/results.aspx?domain=LOCAPROXY.COM
+          examples:
+            - Select Contact Domain Holder link at https://www.godaddy.com/whois/results.aspx?domain=LOCAPROXY.COM
     Registrar:
       type: object
       description: Registrar that sponsors the domain.
@@ -291,16 +305,19 @@ components:
         iana_id:
           type: string
           description: Registrar IANA ID.
-          example: '146'
+          examples:
+            - '146'
         name:
           type: string
           description: Registrar name.
-          example: GoDaddy.com, LLC
+          examples:
+            - GoDaddy.com, LLC
         url:
           type: string
           format: uri
           description: Registrar website.
-          example: https://www.godaddy.com
+          examples:
+            - https://www.godaddy.com
     DomainWHOISResponse:
       type: object
       description: WHOIS record for one domain.
@@ -310,38 +327,46 @@ components:
         domain:
           type: string
           description: Domain name.
-          example: locaproxy.com
+          examples:
+            - locaproxy.com
         domain_id:
           type: string
           description: Domain name ID assigned by the registry.
-          example: 1710914405_DOMAIN_COM-VRSN
+          examples:
+            - 1710914405_DOMAIN_COM-VRSN
         status:
           type: string
           description: Domain status, including the EPP status code and its ICANN reference.
-          example: clientTransferProhibited https://icann.org/epp#clientTransferProhibited
+          examples:
+            - clientTransferProhibited https://icann.org/epp#clientTransferProhibited
         create_date:
           type: string
           format: date-time
           description: Domain creation date.
-          example: '2012-04-03T02:34:32Z'
+          examples:
+            - '2012-04-03T02:34:32Z'
         update_date:
           type: string
           format: date-time
           description: Date of the last domain update.
-          example: '2021-12-03T02:54:57Z'
+          examples:
+            - '2021-12-03T02:54:57Z'
         expire_date:
           type: string
           format: date-time
           description: Domain expiration date.
-          example: '2024-04-03T02:34:32Z'
+          examples:
+            - '2024-04-03T02:34:32Z'
         domain_age:
           type: integer
           description: Domain age in days.
-          example: 3863
+          examples:
+            - 3863
         whois_server:
           type: string
           description: WHOIS server that answered the query.
-          example: whois.godaddy.com
+          examples:
+            - whois.godaddy.com
         registrar:
           $ref: '#/components/schemas/Registrar'
         registrant:
@@ -357,7 +382,8 @@ components:
           description: Nameservers configured for the domain.
           items:
             type: string
-            example: vera.ns.cloudflare.com
-          example:
-            - vera.ns.cloudflare.com
-            - walt.ns.cloudflare.com
+            examples:
+              - vera.ns.cloudflare.com
+          examples:
+            - - vera.ns.cloudflare.com
+              - walt.ns.cloudflare.com

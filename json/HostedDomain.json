@@ -1,7 +1,8 @@
 {
-  "openapi": "3.0.3",
+  "openapi": "3.2.1",
   "info": {
     "title": "IP2WHOIS Hosted Domain API",
+    "summary": "Hosted Domain",
     "description": "IP2WHOIS Hosted Domain API returns the domain names hosted on an IP address, in real time, for IPv4 and IPv6.\n\n**Authentication.** Send your API key as a Bearer token in the `Authorization` header (recommended), or as the `key` query parameter. Without a key, the IP geolocation endpoint allows 1,000 requests per day from the same client IP. This endpoint requires an API key.\n\n**Pagination.** Results are returned 100 domains at a time on the Security plan (1 on Free, 5 on Starter, 20 on Plus). Read `total_pages` from the first response and request each `page` in turn until every page has been read.\n\nThe endpoint supports JSON and XML responses.",
     "version": "1",
     "termsOfService": "https://www.ip2location.io/terms-of-service",
@@ -238,7 +239,9 @@
         "schema": {
           "type": "string",
           "format": "ip",
-          "example": "8.8.8.8"
+          "examples": [
+            "8.8.8.8"
+          ]
         },
         "description": "IPv4 or IPv6 address to look up."
       },
@@ -264,7 +267,9 @@
           "type": "integer",
           "minimum": 1,
           "default": 1,
-          "example": 1
+          "examples": [
+            1
+          ]
         },
         "description": "Page of hosted domains to return. Increment it until `total_pages` is reached. Defaults to the first page."
       }
@@ -287,12 +292,16 @@
               "error_code": {
                 "type": "integer",
                 "description": "Numeric error code, unique within the API.",
-                "example": 10001
+                "examples": [
+                  10001
+                ]
               },
               "error_message": {
                 "type": "string",
                 "description": "Human-readable error message.",
-                "example": "Invalid IP address."
+                "examples": [
+                  "Invalid IP address."
+                ]
               }
             }
           }
@@ -310,40 +319,54 @@
             "type": "string",
             "format": "ip",
             "description": "IP address that was looked up.",
-            "example": "8.8.8.8"
+            "examples": [
+              "8.8.8.8"
+            ]
           },
           "total_domains": {
             "type": "integer",
             "description": "Total number of hosted domains found for the address.",
-            "example": 3857
+            "examples": [
+              3857
+            ]
           },
           "page": {
             "type": "integer",
             "minimum": 1,
             "description": "Current page number.",
-            "example": 1
+            "examples": [
+              1
+            ]
           },
           "per_page": {
             "type": "integer",
             "description": "Number of domains returned per page. Free: 1, Starter: 5, Plus: 20, Security: 100.",
-            "example": 100
+            "examples": [
+              100
+            ]
           },
           "total_pages": {
             "type": "integer",
             "description": "Total number of pages for the address.",
-            "example": 39
+            "examples": [
+              39
+            ]
           },
           "domains": {
             "type": "array",
             "description": "Domain names hosted on the address, one page at a time.",
             "items": {
               "type": "string",
-              "example": "000180.top"
+              "examples": [
+                "000180.top"
+              ]
             },
-            "example": [
-              "000180.top",
-              "00100tet.xyz",
-              "001hash.vip"
+            "examples": [
+              [
+                "000180.top",
+                "00100tet.xyz",
+                "001hash.vip"
+              ]
             ]
           }
         }

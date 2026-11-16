@@ -1,6 +1,7 @@
-openapi: 3.0.3
+openapi: 3.2.1
 info:
   title: IP2WHOIS Hosted Domain API
+  summary: Hosted Domain
   description: |-
     IP2WHOIS Hosted Domain API returns the domain names hosted on an IP address, in real time, for IPv4 and IPv6.
 
@@ -170,7 +171,8 @@ components:
       schema:
         type: string
         format: ip
-        example: 8.8.8.8
+        examples:
+          - 8.8.8.8
       description: IPv4 or IPv6 address to look up.
     format_json_xml:
       name: format
@@ -191,7 +193,8 @@ components:
         type: integer
         minimum: 1
         default: 1
-        example: 1
+        examples:
+          - 1
       description: Page of hosted domains to return. Increment it until `total_pages` is reached. Defaults to the first page.
   schemas:
     ErrorResponse:
@@ -209,11 +212,13 @@ components:
             error_code:
               type: integer
               description: Numeric error code, unique within the API.
-              example: 10001
+              examples:
+                - 10001
             error_message:
               type: string
               description: Human-readable error message.
-              example: Invalid IP address.
+              examples:
+                - Invalid IP address.
     HostedDomainResponse:
       type: object
       description: One page of domain names hosted on the requested address.
@@ -225,31 +230,37 @@ components:
           type: string
           format: ip
           description: IP address that was looked up.
-          example: 8.8.8.8
+          examples:
+            - 8.8.8.8
         total_domains:
           type: integer
           description: Total number of hosted domains found for the address.
-          example: 3857
+          examples:
+            - 3857
         page:
           type: integer
           minimum: 1
           description: Current page number.
-          example: 1
+          examples:
+            - 1
         per_page:
           type: integer
           description: 'Number of domains returned per page. Free: 1, Starter: 5, Plus: 20, Security: 100.'
-          example: 100
+          examples:
+            - 100
         total_pages:
           type: integer
           description: Total number of pages for the address.
-          example: 39
+          examples:
+            - 39
         domains:
           type: array
           description: Domain names hosted on the address, one page at a time.
           items:
             type: string
-            example: 000180.top
-          example:
-            - 000180.top
-            - 00100tet.xyz
-            - 001hash.vip
+            examples:
+              - 000180.top
+          examples:
+            - - 000180.top
+              - 00100tet.xyz
+              - 001hash.vip

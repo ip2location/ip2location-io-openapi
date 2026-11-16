@@ -67,7 +67,7 @@ Each definition lists the error codes it can return, mapped to their HTTP status
 
 Typically, you can import and use the API definition files in [Postman](https://www.postman.com/). Postman allows you to quickly set up an API request by importing an existing definition file. You can follow their tutorial (https://learning.postman.com/docs/getting-started/importing-and-exporting/importing-from-swagger/) to learn more on how to do it.
 
-The definitions also work with the [Swagger Editor](https://editor.swagger.io/), [Redocly](https://redocly.com/) and any OpenAPI 3.0 compatible client or code generator.
+The definitions are written to OpenAPI 3.2.1 and also work with the [Swagger Editor](https://editor.swagger.io/), [Redocly](https://redocly.com/) and any OpenAPI 3.2 compatible client or code generator.
 
 ## License
 

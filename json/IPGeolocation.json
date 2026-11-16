@@ -1,7 +1,8 @@
 {
-  "openapi": "3.0.3",
+  "openapi": "3.2.1",
   "info": {
     "title": "IP2Location.io IP Geolocation API",
+    "summary": "IP Geolocation",
     "description": "IP2Location.io IP Geolocation API returns location, network, mobile and security data for an IPv4 or IPv6 address in real time.\n\n**Plan-dependent fields.** The Free plan returns the 11 basic attributes. Starter adds ISP, domain, net speed, IDD and area codes, weather station, elevation and usage type. Plus adds translated place names, the continent, country, region, city, time zone and geotargeting objects, mobile data and address type. Security adds the full proxy object, the IP2Proxy fraud score, AS details and the advertising category. Every field is optional in the response schema because the set depends on the plan.\n\n**Authentication.** Send your API key as a Bearer token in the `Authorization` header (recommended), or as the `key` query parameter. Without a key, the IP geolocation endpoint allows 1,000 requests per day from the same client IP.\n\n**Rate limits.** Keyless requests are limited to 1,000 per day per client IP, reset at 00:00 UTC. A Free plan key allows up to 50,000 queries per month. Paid plans keep serving requests and bill overage.\n\nThe endpoint supports JSON and XML responses.",
     "version": "1",
     "termsOfService": "https://www.ip2location.io/terms-of-service",
@@ -452,7 +453,9 @@
         "schema": {
           "type": "string",
           "format": "ip",
-          "example": "8.8.8.8"
+          "examples": [
+            "8.8.8.8"
+          ]
         },
         "description": "IPv4 or IPv6 address to look up. When omitted, the IP address of the requesting client is used."
       },
@@ -512,17 +515,23 @@
           "as_number": {
             "type": "string",
             "description": "Autonomous system number (ASN).",
-            "example": "15169"
+            "examples": [
+              "15169"
+            ]
           },
           "as_name": {
             "type": "string",
             "description": "Autonomous system (AS) name.",
-            "example": "Google LLC"
+            "examples": [
+              "Google LLC"
+            ]
           },
           "as_domain": {
             "type": "string",
             "description": "Domain name of the AS registrant.",
-            "example": "google.com"
+            "examples": [
+              "google.com"
+            ]
           },
           "as_usage_type": {
             "type": "string",
@@ -543,12 +552,16 @@
               "ISP/MOB"
             ],
             "description": "Usage type of the AS registrant.",
-            "example": "DCH"
+            "examples": [
+              "DCH"
+            ]
           },
           "as_cidr": {
             "type": "string",
             "description": "CIDR range for the whole AS.",
-            "example": "8.8.8.0/24"
+            "examples": [
+              "8.8.8.0/24"
+            ]
           }
         }
       },
@@ -559,7 +572,9 @@
           "name": {
             "type": "string",
             "description": "Continent name.",
-            "example": "North America"
+            "examples": [
+              "North America"
+            ]
           },
           "code": {
             "type": "string",
@@ -573,7 +588,9 @@
               "SA"
             ],
             "description": "Two-character continent code.",
-            "example": "NA"
+            "examples": [
+              "NA"
+            ]
           },
           "hemisphere": {
             "type": "array",
@@ -587,9 +604,11 @@
                 "west"
               ]
             },
-            "example": [
-              "north",
-              "west"
+            "examples": [
+              [
+                "north",
+                "west"
+              ]
             ]
           },
           "translation": {
@@ -597,14 +616,22 @@
             "description": "Translation of the name for the language requested with the `lang` parameter. Both values are null when no translation is available, for example for city names.",
             "properties": {
               "lang": {
-                "type": "string",
-                "nullable": true,
-                "example": "ko"
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "examples": [
+                  "ko"
+                ]
               },
               "value": {
-                "type": "string",
-                "nullable": true,
-                "example": "북아메리카"
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "examples": [
+                  "북아메리카"
+                ]
               }
             }
           }
@@ -617,43 +644,59 @@
           "name": {
             "type": "string",
             "description": "Country name based on ISO 3166.",
-            "example": "United States of America"
+            "examples": [
+              "United States of America"
+            ]
           },
           "alpha3_code": {
             "type": "string",
             "description": "Three-character country code based on ISO 3166.",
-            "example": "USA"
+            "examples": [
+              "USA"
+            ]
           },
           "numeric_code": {
             "type": "integer",
             "description": "ISO 3166-1 numeric country code.",
-            "example": 840
+            "examples": [
+              840
+            ]
           },
           "demonym": {
             "type": "string",
             "description": "Native of the country.",
-            "example": "Americans"
+            "examples": [
+              "Americans"
+            ]
           },
           "flag": {
             "type": "string",
             "format": "uri",
             "description": "URL of the country flag image.",
-            "example": "https://cdn.ip2location.io/assets/img/flags/us.png"
+            "examples": [
+              "https://cdn.ip2location.io/assets/img/flags/us.png"
+            ]
           },
           "capital": {
             "type": "string",
             "description": "Capital of the country.",
-            "example": "Washington, D.C."
+            "examples": [
+              "Washington, D.C."
+            ]
           },
           "total_area": {
             "type": "number",
             "description": "Total area in square kilometres.",
-            "example": 9826675
+            "examples": [
+              9826675
+            ]
           },
           "population": {
             "type": "integer",
             "description": "Population of the country.",
-            "example": 339665118
+            "examples": [
+              339665118
+            ]
           },
           "currency": {
             "type": "object",
@@ -662,17 +705,23 @@
               "code": {
                 "type": "string",
                 "description": "ISO 4217 currency code.",
-                "example": "USD"
+                "examples": [
+                  "USD"
+                ]
               },
               "name": {
                 "type": "string",
                 "description": "Currency name.",
-                "example": "United States Dollar"
+                "examples": [
+                  "United States Dollar"
+                ]
               },
               "symbol": {
                 "type": "string",
                 "description": "Currency symbol.",
-                "example": "$"
+                "examples": [
+                  "$"
+                ]
               }
             }
           },
@@ -683,33 +732,47 @@
               "code": {
                 "type": "string",
                 "description": "Language code.",
-                "example": "EN"
+                "examples": [
+                  "EN"
+                ]
               },
               "name": {
                 "type": "string",
                 "description": "Language name.",
-                "example": "English"
+                "examples": [
+                  "English"
+                ]
               }
             }
           },
           "tld": {
             "type": "string",
             "description": "Country-code top-level domain.",
-            "example": "us"
+            "examples": [
+              "us"
+            ]
           },
           "translation": {
             "type": "object",
             "description": "Translation of the name for the language requested with the `lang` parameter. Both values are null when no translation is available, for example for city names.",
             "properties": {
               "lang": {
-                "type": "string",
-                "nullable": true,
-                "example": "ko"
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "examples": [
+                  "ko"
+                ]
               },
               "value": {
-                "type": "string",
-                "nullable": true,
-                "example": "북아메리카"
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "examples": [
+                  "북아메리카"
+                ]
               }
             }
           }
@@ -722,26 +785,38 @@
           "name": {
             "type": "string",
             "description": "Region or state name.",
-            "example": "California"
+            "examples": [
+              "California"
+            ]
           },
           "code": {
             "type": "string",
             "description": "ISO 3166-2 code.",
-            "example": "US-CA"
+            "examples": [
+              "US-CA"
+            ]
           },
           "translation": {
             "type": "object",
             "description": "Translation of the name for the language requested with the `lang` parameter. Both values are null when no translation is available, for example for city names.",
             "properties": {
               "lang": {
-                "type": "string",
-                "nullable": true,
-                "example": "ko"
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "examples": [
+                  "ko"
+                ]
               },
               "value": {
-                "type": "string",
-                "nullable": true,
-                "example": "북아메리카"
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "examples": [
+                  "북아메리카"
+                ]
               }
             }
           }
@@ -754,21 +829,31 @@
           "name": {
             "type": "string",
             "description": "City name.",
-            "example": "Mountain View"
+            "examples": [
+              "Mountain View"
+            ]
           },
           "translation": {
             "type": "object",
             "description": "Translation of the name for the language requested with the `lang` parameter. Both values are null when no translation is available, for example for city names.",
             "properties": {
               "lang": {
-                "type": "string",
-                "nullable": true,
-                "example": "ko"
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "examples": [
+                  "ko"
+                ]
               },
               "value": {
-                "type": "string",
-                "nullable": true,
-                "example": "북아메리카"
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "examples": [
+                  "북아메리카"
+                ]
               }
             }
           }
@@ -781,52 +866,74 @@
           "olson": {
             "type": "string",
             "description": "Time zone in Olson format.",
-            "example": "America/Los_Angeles"
+            "examples": [
+              "America/Los_Angeles"
+            ]
           },
           "current_time": {
             "type": "string",
             "format": "date-time",
             "description": "Current local time in ISO 8601 format.",
-            "example": "2025-07-16T19:06:49-07:00"
+            "examples": [
+              "2025-07-16T19:06:49-07:00"
+            ]
           },
           "gmt_offset": {
             "type": "integer",
             "description": "GMT offset in seconds.",
-            "example": -25200
+            "examples": [
+              -25200
+            ]
           },
           "is_dst": {
             "type": "boolean",
             "description": "Whether the time zone is currently observing daylight saving time.",
-            "example": true
+            "examples": [
+              true
+            ]
           },
           "abbreviation": {
             "type": "string",
             "description": "Time zone abbreviation, for example EST or PDT.",
-            "example": "PDT"
+            "examples": [
+              "PDT"
+            ]
           },
           "dst_start_date": {
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "format": "date",
-            "nullable": true,
             "description": "Date on which daylight saving time starts, or null in a time zone without DST.",
-            "example": "2025-03-09"
+            "examples": [
+              "2025-03-09"
+            ]
           },
           "dst_end_date": {
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "format": "date",
-            "nullable": true,
             "description": "Date on which daylight saving time ends, or null in a time zone without DST.",
-            "example": "2025-11-02"
+            "examples": [
+              "2025-11-02"
+            ]
           },
           "sunrise": {
             "type": "string",
             "description": "Sunrise time in local time (hh:mm).",
-            "example": "06:00"
+            "examples": [
+              "06:00"
+            ]
           },
           "sunset": {
             "type": "string",
             "description": "Sunset time in local time (hh:mm).",
-            "example": "20:29"
+            "examples": [
+              "20:29"
+            ]
           }
         }
       },
@@ -835,10 +942,14 @@
         "description": "Geotargeting data. Available on the Plus and Security plans.",
         "properties": {
           "metro": {
-            "type": "string",
-            "nullable": true,
+            "type": [
+              "string",
+              "null"
+            ],
             "description": "Metro code based on the ZIP or postal code, or null when the address is outside a metered area.",
-            "example": "807"
+            "examples": [
+              "807"
+            ]
           }
         }
       },
@@ -849,7 +960,9 @@
           "last_seen": {
             "type": "integer",
             "description": "Number of days since the proxy was last seen.",
-            "example": 13
+            "examples": [
+              13
+            ]
           },
           "proxy_type": {
             "type": "string",
@@ -866,7 +979,9 @@
               "EPN"
             ],
             "description": "Type of proxy.",
-            "example": "DCH"
+            "examples": [
+              "DCH"
+            ]
           },
           "threat": {
             "type": "string",
@@ -878,82 +993,114 @@
               "-"
             ],
             "description": "Security threat reported for the address.",
-            "example": "-"
+            "examples": [
+              "-"
+            ]
           },
           "provider": {
             "type": "string",
             "description": "Name of the VPN provider, when available.",
-            "example": "-"
+            "examples": [
+              "-"
+            ]
           },
           "is_vpn": {
             "type": "boolean",
             "description": "Anonymising VPN service.",
-            "example": false
+            "examples": [
+              false
+            ]
           },
           "is_tor": {
             "type": "boolean",
             "description": "Tor exit node.",
-            "example": false
+            "examples": [
+              false
+            ]
           },
           "is_data_center": {
             "type": "boolean",
             "description": "Hosting provider, data centre or content delivery network.",
-            "example": true
+            "examples": [
+              true
+            ]
           },
           "is_public_proxy": {
             "type": "boolean",
             "description": "Public proxy.",
-            "example": false
+            "examples": [
+              false
+            ]
           },
           "is_web_proxy": {
             "type": "boolean",
             "description": "Web proxy.",
-            "example": false
+            "examples": [
+              false
+            ]
           },
           "is_web_crawler": {
             "type": "boolean",
             "description": "Search engine robot.",
-            "example": false
+            "examples": [
+              false
+            ]
           },
           "is_ai_crawler": {
             "type": "boolean",
             "description": "Crawler operated by an AI company to collect training data or support retrieval.",
-            "example": false
+            "examples": [
+              false
+            ]
           },
           "is_residential_proxy": {
             "type": "boolean",
             "description": "Residential proxy.",
-            "example": false
+            "examples": [
+              false
+            ]
           },
           "is_spammer": {
             "type": "boolean",
             "description": "Email or forum spammer.",
-            "example": false
+            "examples": [
+              false
+            ]
           },
           "is_scanner": {
             "type": "boolean",
             "description": "Network security scanner.",
-            "example": false
+            "examples": [
+              false
+            ]
           },
           "is_botnet": {
             "type": "boolean",
             "description": "Malware-infected device.",
-            "example": false
+            "examples": [
+              false
+            ]
           },
           "is_bogon": {
             "type": "boolean",
             "description": "Unassigned or illegitimate address announced via BGP.",
-            "example": false
+            "examples": [
+              false
+            ]
           },
           "is_consumer_privacy_network": {
             "type": "boolean",
             "description": "Consumer privacy network.",
-            "example": false
+            "examples": [
+              false
+            ]
           },
           "is_enterprise_private_network": {
             "type": "boolean",
             "description": "Enterprise private network.",
-            "example": false
+            "examples": [
+              false
+            ]
           }
         }
       },
@@ -974,12 +1121,16 @@
               "error_code": {
                 "type": "integer",
                 "description": "Numeric error code, unique within the API.",
-                "example": 10001
+                "examples": [
+                  10001
+                ]
               },
               "error_message": {
                 "type": "string",
                 "description": "Human-readable error message.",
-                "example": "Invalid IP address."
+                "examples": [
+                  "Invalid IP address."
+                ]
               }
             }
           }
@@ -996,62 +1147,86 @@
             "type": "string",
             "format": "ip",
             "description": "IP address that was looked up.",
-            "example": "8.8.8.8"
+            "examples": [
+              "8.8.8.8"
+            ]
           },
           "country_code": {
             "type": "string",
             "description": "Two-character country code based on ISO 3166.",
-            "example": "US"
+            "examples": [
+              "US"
+            ]
           },
           "country_name": {
             "type": "string",
             "description": "Country name based on ISO 3166.",
-            "example": "United States of America"
+            "examples": [
+              "United States of America"
+            ]
           },
           "region_name": {
             "type": "string",
             "description": "Region or state name.",
-            "example": "California"
+            "examples": [
+              "California"
+            ]
           },
           "district": {
             "type": "string",
             "description": "District or county name. Available on the Security plan.",
-            "example": "Santa Clara County"
+            "examples": [
+              "Santa Clara County"
+            ]
           },
           "city_name": {
             "type": "string",
             "description": "City name.",
-            "example": "Mountain View"
+            "examples": [
+              "Mountain View"
+            ]
           },
           "latitude": {
             "type": "number",
             "description": "City latitude. Defaults to the capital city latitude when the city is unknown.",
-            "example": 37.38605
+            "examples": [
+              37.38605
+            ]
           },
           "longitude": {
             "type": "number",
             "description": "City longitude. Defaults to the capital city longitude when the city is unknown.",
-            "example": -122.08385
+            "examples": [
+              -122.08385
+            ]
           },
           "zip_code": {
             "type": "string",
             "description": "ZIP or postal code.",
-            "example": "94035"
+            "examples": [
+              "94035"
+            ]
           },
           "time_zone": {
             "type": "string",
             "description": "UTC time zone with daylight saving time applied.",
-            "example": "-07:00"
+            "examples": [
+              "-07:00"
+            ]
           },
           "asn": {
             "type": "string",
             "description": "Autonomous system number (ASN).",
-            "example": "15169"
+            "examples": [
+              "15169"
+            ]
           },
           "as": {
             "type": "string",
             "description": "Autonomous system (AS) name.",
-            "example": "Google LLC"
+            "examples": [
+              "Google LLC"
+            ]
           },
           "as_info": {
             "$ref": "#/components/schemas/ASInfo"
@@ -1059,12 +1234,16 @@
           "isp": {
             "type": "string",
             "description": "Internet Service Provider or company name. Available on the Starter plan and above.",
-            "example": "Google LLC"
+            "examples": [
+              "Google LLC"
+            ]
           },
           "domain": {
             "type": "string",
             "description": "Internet domain name associated with the IP address range. Available on the Starter plan and above.",
-            "example": "google.com"
+            "examples": [
+              "google.com"
+            ]
           },
           "net_speed": {
             "type": "string",
@@ -1076,50 +1255,74 @@
               "SAT"
             ],
             "description": "Internet connection type. DIAL = dial-up, DSL = broadband/cable/fibre/mobile, COMP = corporate, T1 = data centre/transit, SAT = satellite. Available on the Starter plan and above.",
-            "example": "T1"
+            "examples": [
+              "T1"
+            ]
           },
           "idd_code": {
             "type": "string",
             "description": "IDD prefix used to call the city from another country. Available on the Starter plan and above.",
-            "example": "1"
+            "examples": [
+              "1"
+            ]
           },
           "area_code": {
             "type": "string",
             "description": "Area code for calls between cities. Available on the Starter plan and above.",
-            "example": "650"
+            "examples": [
+              "650"
+            ]
           },
           "weather_station_code": {
             "type": "string",
             "description": "Code of the nearest weather observation station. Available on the Starter plan and above.",
-            "example": "USCA0746"
+            "examples": [
+              "USCA0746"
+            ]
           },
           "weather_station_name": {
             "type": "string",
             "description": "Name of the nearest weather observation station. Available on the Starter plan and above.",
-            "example": "Mountain View"
+            "examples": [
+              "Mountain View"
+            ]
           },
           "mcc": {
-            "type": "string",
-            "nullable": true,
+            "type": [
+              "string",
+              "null"
+            ],
             "description": "Mobile Country Code (ITU E.212), or null when unknown. Available on the Plus plan and above.",
-            "example": "-"
+            "examples": [
+              "-"
+            ]
           },
           "mnc": {
-            "type": "string",
-            "nullable": true,
+            "type": [
+              "string",
+              "null"
+            ],
             "description": "Mobile Network Code, or null when unknown. Available on the Plus plan and above.",
-            "example": "-"
+            "examples": [
+              "-"
+            ]
           },
           "mobile_brand": {
-            "type": "string",
-            "nullable": true,
+            "type": [
+              "string",
+              "null"
+            ],
             "description": "Commercial brand associated with the mobile carrier, or null when unknown. Available on the Plus plan and above.",
-            "example": "-"
+            "examples": [
+              "-"
+            ]
           },
           "elevation": {
             "type": "number",
             "description": "Average height of the city above sea level, in metres. Available on the Starter plan and above.",
-            "example": 32
+            "examples": [
+              32
+            ]
           },
           "usage_type": {
             "type": "string",
@@ -1140,7 +1343,9 @@
               "ISP/MOB"
             ],
             "description": "Usage type classification of the ISP or company. Available on the Starter plan and above.",
-            "example": "DCH"
+            "examples": [
+              "DCH"
+            ]
           },
           "address_type": {
             "type": "string",
@@ -1151,17 +1356,23 @@
               "Broadcast"
             ],
             "description": "IP address type. Available on the Plus plan and above.",
-            "example": "Anycast"
+            "examples": [
+              "Anycast"
+            ]
           },
           "ads_category": {
             "type": "string",
             "description": "Domain category code based on the IAB Tech Lab Content Taxonomy v3.1. Available on the Security plan.",
-            "example": "622"
+            "examples": [
+              "622"
+            ]
           },
           "ads_category_name": {
             "type": "string",
             "description": "Domain category name based on the IAB Tech Lab Content Taxonomy v3.1, or \"-\" when unclassified. Available on the Security plan.",
-            "example": "Web Hosting"
+            "examples": [
+              "Web Hosting"
+            ]
           },
           "continent": {
             "$ref": "#/components/schemas/Continent"
@@ -1184,14 +1395,18 @@
           "is_proxy": {
             "type": "boolean",
             "description": "Whether the address belongs to a known proxy, VPN, Tor exit node or another masking service.",
-            "example": false
+            "examples": [
+              false
+            ]
           },
           "fraud_score": {
             "type": "integer",
             "minimum": 0,
             "maximum": 99,
             "description": "IP2Proxy fraud score from 0 to 99. A higher score means a greater likelihood of fraudulent activity. Available on the Security plan.",
-            "example": 0
+            "examples": [
+              0
+            ]
           },
           "proxy": {
             "$ref": "#/components/schemas/Proxy"
