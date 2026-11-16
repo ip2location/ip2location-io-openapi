@@ -2,63 +2,88 @@
   "openapi": "3.0.3",
   "info": {
     "title": "IP2Location.io Bulk IP Geolocation API",
-    "description": "IP2Location.io Bulk IP Geolocation API allows users to check IP address location in bulk. This API supports up to 1000 IPv4 and IPv6 addresses per query.",
+    "description": "IP2Location.io Bulk IP Geolocation API looks up up to 1,000 IPv4 and IPv6 addresses in a single request and returns a record per address.\n\n**Authentication.** Send your API key as a Bearer token in the `Authorization` header (recommended), or as the `key` query parameter. Without a key, the IP geolocation endpoint allows 1,000 requests per day from the same client IP. This endpoint requires a paid plan.\n\n**Request body.** Send a newline-separated list of addresses as `text/plain`, or a JSON array of addresses as `application/json`.\n\n**Response.** With `format=json` the response is an object keyed by address. With `format=csv` it is a CSV table with one row per address and the requested fields as columns. Use `fields` to limit the columns; omitting it returns every field.",
     "version": "1",
+    "termsOfService": "https://www.ip2location.io/terms-of-service",
     "contact": {
-		"name": "IP2Location.io",
-		"url": "https://github.com/ip2location/ip2location-io-openapi"
-	}
+      "name": "IP2Location.io",
+      "url": "https://www.ip2location.io",
+      "email": "support@ip2location.io"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://github.com/ip2location/ip2location-io-openapi/blob/main/LICENSE"
+    }
   },
   "servers": [
     {
-      "url": "https://bulk.ip2location.io"
+      "url": "https://bulk.ip2location.io",
+      "description": "Bulk lookup endpoint."
+    }
+  ],
+  "tags": [
+    {
+      "name": "Bulk IP Geolocation",
+      "description": "Look up up to 1,000 IP addresses in one request."
     }
   ],
   "paths": {
     "/": {
       "post": {
-        "summary": "Bulk IP Geolocation API",
-        "description": "Geolocate IP address location in bulk. Supports up to 1000 IP addresses per query.",
-        "operationId": "bulkIpGeolocationApi",
+        "tags": [
+          "Bulk IP Geolocation"
+        ],
+        "summary": "Geolocate up to 1,000 IP addresses",
+        "description": "Looks up a batch of IPv4 and IPv6 addresses and returns one record per address. Send the addresses as newline-separated text or as a JSON array. The endpoint requires a paid plan and accepts at most 1,000 addresses per request.",
+        "operationId": "bulkIpGeolocation",
+        "externalDocs": {
+          "description": "Bulk API documentation",
+          "url": "https://www.ip2location.io/ip2location-bulk-documentation"
+        },
         "parameters": [
           {
-            "name": "key",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "(required) IP2Location.io API key."
+            "$ref": "#/components/parameters/key_required"
           },
           {
-            "name": "format",
-            "in": "query",
-            "schema": {
-              "enum": [
-                "json",
-                "csv"
-              ],
-              "type": "string"
-            },
-            "description": "(optional) Format of the response message. If unspecified, json format will be used for the response message."
+            "$ref": "#/components/parameters/format_json_csv"
           },
           {
-            "name": "fields",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "description": "(optional) Custom fields returned by the API endpoint. You can specify multiple fields by separating them with comma (,). If unspecified, all fields will be returned. Valid value: country_code | country_name | region_name | city_name | latitude | longitude | zip_code | time_zone | asn | as | is_proxy "
+            "$ref": "#/components/parameters/fields"
           }
         ],
         "requestBody": {
-          "description": "(required) A list of IP address separated by new line or JSON encoded IP list.",
           "required": true,
+          "description": "IP addresses to look up: newline-separated text or a JSON array.",
           "content": {
             "text/plain": {
+              "schema": {
+                "type": "string",
+                "example": "1.1.1.1\n2.2.2.2"
+              },
               "examples": {
-                "Bulk IP Geolocation API": {
-                  "value": "8.8.8.8\n9.9.9.9"
+                "Newline-separated": {
+                  "value": "1.1.1.1\n2.2.2.2"
+                }
+              }
+            },
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "ip"
+                },
+                "example": [
+                  "1.1.1.1",
+                  "2.2.2.2"
+                ]
+              },
+              "examples": {
+                "JSON array": {
+                  "value": [
+                    "1.1.1.1",
+                    "2.2.2.2"
+                  ]
                 }
               }
             }
@@ -66,146 +91,1057 @@
         },
         "responses": {
           "200": {
-            "description": "Get response from bulk IP lookup",
+            "description": "One geolocation record per submitted address.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "8.8.8.8": {
-                      "type": "object",
-                      "properties": {
-                        "as": {
-                          "type": "string",
-                          "example": "Google LLC"
+                  "$ref": "#/components/schemas/BulkIPGeolocationResponse"
+                },
+                "examples": {
+                  "JSON response": {
+                    "value": {
+                      "1.1.1.1": {
+                        "country_code": "AU",
+                        "country_name": "Australia",
+                        "region_name": "Queensland",
+                        "district": "Brisbane",
+                        "city_name": "Brisbane",
+                        "latitude": -27.46754,
+                        "longitude": 153.02809,
+                        "zip_code": "4000",
+                        "time_zone": "+10:00",
+                        "asn": "13335",
+                        "as": "CloudFlare Inc",
+                        "as_info": {
+                          "as_number": "13335",
+                          "as_name": "CloudFlare Inc",
+                          "as_domain": "cloudflare.com",
+                          "as_usage_type": "CDN",
+                          "as_cidr": "1.1.1.0/24"
                         },
-                        "asn": {
-                          "type": "string",
-                          "example": "15169"
+                        "isp": "APNIC and CloudFlare DNS Resolver Project",
+                        "domain": "cloudflare.com",
+                        "net_speed": "T1",
+                        "idd_code": "61",
+                        "area_code": "07",
+                        "weather_station_code": "ASXX0016",
+                        "weather_station_name": "Brisbane",
+                        "mcc": null,
+                        "mnc": null,
+                        "mobile_brand": null,
+                        "elevation": 16,
+                        "usage_type": "CDN",
+                        "address_type": "Anycast",
+                        "ads_category": "622",
+                        "ads_category_name": "Web Hosting",
+                        "continent": {
+                          "name": "Oceania",
+                          "code": "OC",
+                          "hemisphere": [
+                            "south",
+                            "east"
+                          ],
+                          "translation": {
+                            "lang": "en",
+                            "value": "Oceania"
+                          }
                         },
-                        "city_name": {
-                          "type": "string",
-                          "example": "Mountain View"
+                        "country": {
+                          "name": "Australia",
+                          "alpha3_code": "AUS",
+                          "numeric_code": 36,
+                          "demonym": "Australians",
+                          "flag": "https://cdn.ip2location.io/assets/img/flags/au.png",
+                          "capital": "Canberra",
+                          "total_area": 7741220,
+                          "population": 26461166,
+                          "currency": {
+                            "code": "AUD",
+                            "name": "Australian Dollar",
+                            "symbol": "$"
+                          },
+                          "language": {
+                            "code": "EN",
+                            "name": "English"
+                          },
+                          "tld": "au",
+                          "translation": {
+                            "lang": "en",
+                            "value": "Australia"
+                          }
                         },
-                        "country_code": {
-                          "type": "string",
-                          "example": "US"
+                        "region": {
+                          "name": "Queensland",
+                          "code": "AU-QLD",
+                          "translation": {
+                            "lang": "en",
+                            "value": "Queensland"
+                          }
                         },
-                        "country_name": {
-                          "type": "string",
-                          "example": "United States of America"
+                        "city": {
+                          "name": "Brisbane",
+                          "translation": {
+                            "lang": "en",
+                            "value": "Brisbane"
+                          }
                         },
-                        "is_proxy": {
-                          "type": "boolean",
-                          "example": false
+                        "time_zone_info": {
+                          "olson": "Australia/Brisbane",
+                          "current_time": "2026-02-24T11:34:09+10:00",
+                          "gmt_offset": 36000,
+                          "is_dst": false,
+                          "abbreviation": "AEST",
+                          "dst_start_date": null,
+                          "dst_end_date": null,
+                          "sunrise": "05:36",
+                          "sunset": "18:26"
                         },
-                        "latitude": {
-                          "type": "number",
-                          "example": 37.38605
+                        "geotargeting": {
+                          "metro": null
                         },
-                        "longitude": {
-                          "type": "number",
-                          "example": -122.08385
-                        },
-                        "region_name": {
-                          "type": "string",
-                          "example": "California"
-                        },
-                        "time_zone": {
-                          "type": "string",
-                          "example": "google.com"
-                        },
-                        "zip_code": {
-                          "type": "string",
-                          "example": "94035"
+                        "is_proxy": false,
+                        "fraud_score": 0,
+                        "proxy": {
+                          "last_seen": 1,
+                          "proxy_type": "DCH",
+                          "threat": "-",
+                          "provider": "-",
+                          "is_vpn": false,
+                          "is_tor": false,
+                          "is_data_center": true,
+                          "is_public_proxy": false,
+                          "is_web_proxy": false,
+                          "is_web_crawler": false,
+                          "is_ai_crawler": false,
+                          "is_residential_proxy": false,
+                          "is_spammer": false,
+                          "is_scanner": false,
+                          "is_botnet": false,
+                          "is_bogon": false,
+                          "is_consumer_privacy_network": false,
+                          "is_enterprise_private_network": false
                         }
-                      }
-                    },
-                    "9.9.9.9": {
-                      "type": "object",
-                      "properties": {
-                        "as": {
-                          "type": "string",
-                          "example": "QUAD9"
-                        },
-                        "asn": {
-                          "type": "string",
-                          "example": "19281"
-                        },
-                        "city_name": {
-                          "type": "string",
-                          "example": "Berkeley"
-                        },
-                        "country_code": {
-                          "type": "string",
-                          "example": "US"
-                        },
-                        "country_name": {
-                          "type": "string",
-                          "example": "United States of America"
-                        },
-                        "is_proxy": {
-                          "type": "boolean",
-                          "example": false
-                        },
-                        "latitude": {
-                          "type": "number",
-                          "example": 37.87159
-                        },
-                        "longitude": {
-                          "type": "number",
-                          "example": -122.27275
-                        },
-                        "region_name": {
-                          "type": "string",
-                          "example": "California"
-                        },
-                        "time_zone": {
-                          "type": "string",
-                          "example": "quad9.net"
-                        },
-                        "zip_code": {
-                          "type": "string",
-                          "example": "94709"
-                        }
+                      },
+                      "2.2.2.2": {
+                        "country_code": "US",
+                        "country_name": "United States of America",
+                        "region_name": "Virginia",
+                        "district": "Redwood",
+                        "city_name": "Redwood",
+                        "latitude": 37.005847,
+                        "longitude": -79.770089,
+                        "zip_code": "24146",
+                        "time_zone": "-05:00",
+                        "asn": "15519",
+                        "as": "Oracle Svenska AB",
+                        "isp": "Oracle Svenska AB",
+                        "domain": "oracle.com",
+                        "net_speed": "T1",
+                        "idd_code": "1",
+                        "area_code": "540",
+                        "weather_station_code": "USVA0640",
+                        "weather_station_name": "Redwood",
+                        "elevation": 325,
+                        "usage_type": "DCH",
+                        "address_type": "Unicast",
+                        "is_proxy": false
                       }
                     }
                   }
+                }
+              },
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "ip_address,country_code,country_name,region_name,city_name,latitude,longitude,zip_code,time_zone,asn,as,as_info.as_name,as_info.as_number,as_info.as_domain,as_info.as_cidr,as_info.as_usage_type,isp,domain,net_speed,idd_code,area_code,weather_station_code,weather_station_name,mcc,mnc,mobile_brand,elevation,usage_type,address_type,ads_category,ads_category_name,district,continent.name,continent.code,continent.hemisphere,continent.translation,country.name,country.alpha3_code,country.numeric_code,country.demonym,country.flag,country.capital,country.total_area,country.population,country.currency,country.language,country.tld,country.translation,region.name,region.code,region.translation,city.name,city.translation,time_zone_info.olson,time_zone_info.current_time,time_zone_info.gmt_offset,time_zone_info.is_dst,time_zone_info.abbreviation,time_zone_info.dst_start_date,time_zone_info.dst_end_date,time_zone_info.sunrise,time_zone_info.sunset,geotargeting.metro,is_proxy,fraud_score,proxy.last_seen,proxy.proxy_type,proxy.threat,proxy.provider,proxy.is_vpn,proxy.is_tor,proxy.is_data_center,proxy.is_public_proxy,proxy.is_web_proxy,proxy.is_web_crawler,proxy.is_ai_crawler,proxy.is_residential_proxy,proxy.is_spammer,proxy.is_scanner,proxy.is_botnet,proxy.is_bogon,proxy.is_consumer_privacy_network,proxy.is_enterprise_private_network\n1.1.1.1,AU,Australia,Queensland,Brisbane,-27.46754,153.02809,4000,+10:00,13335,\"CloudFlare Inc\",\"APNIC and CloudFlare DNS Resolver Project\",cloudflare.com,T1,61,07,ASXX0016,Brisbane,,,,16,CDN,A,Oceania,OC,south,east,en,Oceania,Australia,AUS,36,Australians,https://cdn.ip2location.io/assets/img/flags/au.png,Canberra,7741220,26461166,AUD,\"Australian Dollar\",$,EN,English,au,en,Australia,Queensland,AU-QLD,en,Queensland,Brisbane,en,Brisbane,Australia/Brisbane,2026-02-24T11:34:09+10:00,36000,,AEST,,,05:36,18:26,,,0,1,DCH,,,,,1,,,,,,,,,,,"
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid API key or insufficient credit. This endpoint requires a paid plan.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
                 },
                 "examples": {
-                  "Bulk IP Geolocation API": {
+                  "Invalid API key": {
                     "value": {
-                      "8.8.8.8": {
-                        "as": "Google LLC",
-                        "asn": "15169",
-                        "city_name": "Mountain View",
-                        "country_code": "US",
-                        "country_name": "United States of America",
-                        "is_proxy": false,
-                        "latitude": 37.38605,
-                        "longitude": -122.08385,
-                        "region_name": "California",
-                        "time_zone": "google.com",
-                        "zip_code": "94035"
-                      },
-                      "9.9.9.9": {
-                        "as": "QUAD9",
-                        "asn": "19281",
-                        "city_name": "Berkeley",
-                        "country_code": "US",
-                        "country_name": "United States of America",
-                        "is_proxy": false,
-                        "latitude": 37.87159,
-                        "longitude": -122.27275,
-                        "region_name": "California",
-                        "time_zone": "quad9.net",
-                        "zip_code": "94709"
+                      "error": {
+                        "error_code": 401,
+                        "error_message": "Invalid API key or insufficient credit."
                       }
                     }
                   }
                 }
               }
             }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "Internal server error": {
+                    "value": {
+                      "error": {
+                        "error_code": 500,
+                        "error_message": "Internal server error."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "API key sent as `Authorization: Bearer {YOUR_API_KEY}`. This is the recommended method because it keeps the key out of URLs, logs and browser history."
+      },
+      "apiKey": {
+        "type": "apiKey",
+        "in": "query",
+        "name": "key",
+        "description": "API key sent as the `key` query parameter. Supported as an alternative to the Bearer token, but less secure because the key appears in the URL."
+      }
+    },
+    "parameters": {
+      "key_required": {
+        "name": "key",
+        "in": "query",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "API key. Required unless the `Authorization: Bearer` header is sent. Get a free key at https://www.ip2location.io/sign-up."
+      },
+      "format_json_csv": {
+        "name": "format",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "json",
+            "csv"
+          ],
+          "default": "json"
+        },
+        "description": "Response format. Defaults to `json`."
+      },
+      "fields": {
+        "name": "fields",
+        "in": "query",
+        "required": false,
+        "style": "form",
+        "explode": false,
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "country_code",
+              "country_name",
+              "region_name",
+              "city_name",
+              "latitude",
+              "longitude",
+              "zip_code",
+              "time_zone",
+              "asn",
+              "as",
+              "as_info.as_name",
+              "as_info.as_number",
+              "as_info.as_domain",
+              "as_info.as_cidr",
+              "as_info.as_usage_type",
+              "isp",
+              "domain",
+              "net_speed",
+              "idd_code",
+              "area_code",
+              "weather_station_code",
+              "weather_station_name",
+              "mcc",
+              "mnc",
+              "mobile_brand",
+              "elevation",
+              "usage_type",
+              "address_type",
+              "ads_category",
+              "ads_category_name",
+              "district",
+              "continent.name",
+              "continent.code",
+              "continent.hemisphere",
+              "continent.translation",
+              "country.name",
+              "country.alpha3_code",
+              "country.numeric_code",
+              "country.demonym",
+              "country.flag",
+              "country.capital",
+              "country.total_area",
+              "country.population",
+              "country.currency",
+              "country.language",
+              "country.tld",
+              "country.translation",
+              "region.name",
+              "region.code",
+              "region.translation",
+              "city.name",
+              "city.translation",
+              "time_zone_info.olson",
+              "time_zone_info.current_time",
+              "time_zone_info.gmt_offset",
+              "time_zone_info.is_dst",
+              "time_zone_info.abbreviation",
+              "time_zone_info.dst_start_date",
+              "time_zone_info.dst_end_date",
+              "time_zone_info.sunrise",
+              "time_zone_info.sunset",
+              "geotargeting.metro",
+              "is_proxy",
+              "fraud_score",
+              "proxy.last_seen",
+              "proxy.proxy_type",
+              "proxy.threat",
+              "proxy.provider",
+              "proxy.is_vpn",
+              "proxy.is_tor",
+              "proxy.is_data_center",
+              "proxy.is_public_proxy",
+              "proxy.is_web_proxy",
+              "proxy.is_web_crawler",
+              "proxy.is_ai_crawler",
+              "proxy.is_residential_proxy",
+              "proxy.is_spammer",
+              "proxy.is_scanner",
+              "proxy.is_botnet",
+              "proxy.is_bogon",
+              "proxy.is_consumer_privacy_network",
+              "proxy.is_enterprise_private_network"
+            ]
+          },
+          "example": [
+            "country_code",
+            "country_name",
+            "city_name",
+            "is_proxy"
+          ]
+        },
+        "description": "Comma-separated list of fields to return. When omitted, all fields are returned."
+      }
+    },
+    "schemas": {
+      "ASInfo": {
+        "type": "object",
+        "description": "Autonomous System details. Available on the Security plan.",
+        "properties": {
+          "as_number": {
+            "type": "string",
+            "description": "Autonomous system number (ASN).",
+            "example": "15169"
+          },
+          "as_name": {
+            "type": "string",
+            "description": "Autonomous system (AS) name.",
+            "example": "Google LLC"
+          },
+          "as_domain": {
+            "type": "string",
+            "description": "Domain name of the AS registrant.",
+            "example": "google.com"
+          },
+          "as_usage_type": {
+            "type": "string",
+            "enum": [
+              "COM",
+              "ORG",
+              "GOV",
+              "MIL",
+              "EDU",
+              "LIB",
+              "CDN",
+              "ISP",
+              "MOB",
+              "DCH",
+              "SES",
+              "AIC",
+              "RSV",
+              "ISP/MOB"
+            ],
+            "description": "Usage type of the AS registrant.",
+            "example": "DCH"
+          },
+          "as_cidr": {
+            "type": "string",
+            "description": "CIDR range for the whole AS.",
+            "example": "8.8.8.0/24"
+          }
+        }
+      },
+      "Continent": {
+        "type": "object",
+        "description": "Continent details. Available on the Plus and Security plans.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Continent name.",
+            "example": "North America"
+          },
+          "code": {
+            "type": "string",
+            "enum": [
+              "AF",
+              "AN",
+              "AS",
+              "EU",
+              "NA",
+              "OC",
+              "SA"
+            ],
+            "description": "Two-character continent code.",
+            "example": "NA"
+          },
+          "hemisphere": {
+            "type": "array",
+            "description": "The hemisphere where the country is located. The first item is the north/south hemisphere and the second item is the east/west hemisphere.",
+            "items": {
+              "type": "string",
+              "enum": [
+                "north",
+                "south",
+                "east",
+                "west"
+              ]
+            },
+            "example": [
+              "north",
+              "west"
+            ]
+          },
+          "translation": {
+            "type": "object",
+            "description": "Translation of the name for the language requested with the `lang` parameter. Both values are null when no translation is available, for example for city names.",
+            "properties": {
+              "lang": {
+                "type": "string",
+                "nullable": true,
+                "example": "ko"
+              },
+              "value": {
+                "type": "string",
+                "nullable": true,
+                "example": "북아메리카"
+              }
+            }
+          }
+        }
+      },
+      "Country": {
+        "type": "object",
+        "description": "Country details. Available on the Plus and Security plans.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Country name based on ISO 3166.",
+            "example": "United States of America"
+          },
+          "alpha3_code": {
+            "type": "string",
+            "description": "Three-character country code based on ISO 3166.",
+            "example": "USA"
+          },
+          "numeric_code": {
+            "type": "integer",
+            "description": "ISO 3166-1 numeric country code.",
+            "example": 840
+          },
+          "demonym": {
+            "type": "string",
+            "description": "Native of the country.",
+            "example": "Americans"
+          },
+          "flag": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL of the country flag image.",
+            "example": "https://cdn.ip2location.io/assets/img/flags/us.png"
+          },
+          "capital": {
+            "type": "string",
+            "description": "Capital of the country.",
+            "example": "Washington, D.C."
+          },
+          "total_area": {
+            "type": "number",
+            "description": "Total area in square kilometres.",
+            "example": 9826675
+          },
+          "population": {
+            "type": "integer",
+            "description": "Population of the country.",
+            "example": 339665118
+          },
+          "currency": {
+            "type": "object",
+            "description": "Currency of the country.",
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "ISO 4217 currency code.",
+                "example": "USD"
+              },
+              "name": {
+                "type": "string",
+                "description": "Currency name.",
+                "example": "United States Dollar"
+              },
+              "symbol": {
+                "type": "string",
+                "description": "Currency symbol.",
+                "example": "$"
+              }
+            }
+          },
+          "language": {
+            "type": "object",
+            "description": "Primary language of the country.",
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "Language code.",
+                "example": "EN"
+              },
+              "name": {
+                "type": "string",
+                "description": "Language name.",
+                "example": "English"
+              }
+            }
+          },
+          "tld": {
+            "type": "string",
+            "description": "Country-code top-level domain.",
+            "example": "us"
+          },
+          "translation": {
+            "type": "object",
+            "description": "Translation of the name for the language requested with the `lang` parameter. Both values are null when no translation is available, for example for city names.",
+            "properties": {
+              "lang": {
+                "type": "string",
+                "nullable": true,
+                "example": "ko"
+              },
+              "value": {
+                "type": "string",
+                "nullable": true,
+                "example": "북아메리카"
+              }
+            }
+          }
+        }
+      },
+      "Region": {
+        "type": "object",
+        "description": "Region details. Available on the Plus and Security plans.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Region or state name.",
+            "example": "California"
+          },
+          "code": {
+            "type": "string",
+            "description": "ISO 3166-2 code.",
+            "example": "US-CA"
+          },
+          "translation": {
+            "type": "object",
+            "description": "Translation of the name for the language requested with the `lang` parameter. Both values are null when no translation is available, for example for city names.",
+            "properties": {
+              "lang": {
+                "type": "string",
+                "nullable": true,
+                "example": "ko"
+              },
+              "value": {
+                "type": "string",
+                "nullable": true,
+                "example": "북아메리카"
+              }
+            }
+          }
+        }
+      },
+      "City": {
+        "type": "object",
+        "description": "City details. Available on the Plus and Security plans.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "City name.",
+            "example": "Mountain View"
+          },
+          "translation": {
+            "type": "object",
+            "description": "Translation of the name for the language requested with the `lang` parameter. Both values are null when no translation is available, for example for city names.",
+            "properties": {
+              "lang": {
+                "type": "string",
+                "nullable": true,
+                "example": "ko"
+              },
+              "value": {
+                "type": "string",
+                "nullable": true,
+                "example": "북아메리카"
+              }
+            }
+          }
+        }
+      },
+      "TimeZoneInfo": {
+        "type": "object",
+        "description": "Detailed time zone information. Available on the Plus and Security plans.",
+        "properties": {
+          "olson": {
+            "type": "string",
+            "description": "Time zone in Olson format.",
+            "example": "America/Los_Angeles"
+          },
+          "current_time": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Current local time in ISO 8601 format.",
+            "example": "2025-07-16T19:06:49-07:00"
+          },
+          "gmt_offset": {
+            "type": "integer",
+            "description": "GMT offset in seconds.",
+            "example": -25200
+          },
+          "is_dst": {
+            "type": "boolean",
+            "description": "Whether the time zone is currently observing daylight saving time.",
+            "example": true
+          },
+          "abbreviation": {
+            "type": "string",
+            "description": "Time zone abbreviation, for example EST or PDT.",
+            "example": "PDT"
+          },
+          "dst_start_date": {
+            "type": "string",
+            "format": "date",
+            "nullable": true,
+            "description": "Date on which daylight saving time starts, or null in a time zone without DST.",
+            "example": "2025-03-09"
+          },
+          "dst_end_date": {
+            "type": "string",
+            "format": "date",
+            "nullable": true,
+            "description": "Date on which daylight saving time ends, or null in a time zone without DST.",
+            "example": "2025-11-02"
+          },
+          "sunrise": {
+            "type": "string",
+            "description": "Sunrise time in local time (hh:mm).",
+            "example": "06:00"
+          },
+          "sunset": {
+            "type": "string",
+            "description": "Sunset time in local time (hh:mm).",
+            "example": "20:29"
+          }
+        }
+      },
+      "Geotargeting": {
+        "type": "object",
+        "description": "Geotargeting data. Available on the Plus and Security plans.",
+        "properties": {
+          "metro": {
+            "type": "string",
+            "nullable": true,
+            "description": "Metro code based on the ZIP or postal code, or null when the address is outside a metered area.",
+            "example": "807"
+          }
+        }
+      },
+      "Proxy": {
+        "type": "object",
+        "description": "Proxy and threat details. The full object is available on the Security plan; lower plans only return `is_proxy`.",
+        "properties": {
+          "last_seen": {
+            "type": "integer",
+            "description": "Number of days since the proxy was last seen.",
+            "example": 13
+          },
+          "proxy_type": {
+            "type": "string",
+            "enum": [
+              "VPN",
+              "TOR",
+              "DCH",
+              "PUB",
+              "WEB",
+              "SES",
+              "AIC",
+              "RES",
+              "CPN",
+              "EPN"
+            ],
+            "description": "Type of proxy.",
+            "example": "DCH"
+          },
+          "threat": {
+            "type": "string",
+            "enum": [
+              "SPAM",
+              "SCANNER",
+              "BOTNET",
+              "BOGON",
+              "-"
+            ],
+            "description": "Security threat reported for the address.",
+            "example": "-"
+          },
+          "provider": {
+            "type": "string",
+            "description": "Name of the VPN provider, when available.",
+            "example": "-"
+          },
+          "is_vpn": {
+            "type": "boolean",
+            "description": "Anonymising VPN service.",
+            "example": false
+          },
+          "is_tor": {
+            "type": "boolean",
+            "description": "Tor exit node.",
+            "example": false
+          },
+          "is_data_center": {
+            "type": "boolean",
+            "description": "Hosting provider, data centre or content delivery network.",
+            "example": true
+          },
+          "is_public_proxy": {
+            "type": "boolean",
+            "description": "Public proxy.",
+            "example": false
+          },
+          "is_web_proxy": {
+            "type": "boolean",
+            "description": "Web proxy.",
+            "example": false
+          },
+          "is_web_crawler": {
+            "type": "boolean",
+            "description": "Search engine robot.",
+            "example": false
+          },
+          "is_ai_crawler": {
+            "type": "boolean",
+            "description": "Crawler operated by an AI company to collect training data or support retrieval.",
+            "example": false
+          },
+          "is_residential_proxy": {
+            "type": "boolean",
+            "description": "Residential proxy.",
+            "example": false
+          },
+          "is_spammer": {
+            "type": "boolean",
+            "description": "Email or forum spammer.",
+            "example": false
+          },
+          "is_scanner": {
+            "type": "boolean",
+            "description": "Network security scanner.",
+            "example": false
+          },
+          "is_botnet": {
+            "type": "boolean",
+            "description": "Malware-infected device.",
+            "example": false
+          },
+          "is_bogon": {
+            "type": "boolean",
+            "description": "Unassigned or illegitimate address announced via BGP.",
+            "example": false
+          },
+          "is_consumer_privacy_network": {
+            "type": "boolean",
+            "description": "Consumer privacy network.",
+            "example": false
+          },
+          "is_enterprise_private_network": {
+            "type": "boolean",
+            "description": "Enterprise private network.",
+            "example": false
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "description": "Error envelope returned for every failed request.",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "type": "object",
+            "required": [
+              "error_code",
+              "error_message"
+            ],
+            "properties": {
+              "error_code": {
+                "type": "integer",
+                "description": "Numeric error code, unique within the API.",
+                "example": 10001
+              },
+              "error_message": {
+                "type": "string",
+                "description": "Human-readable error message.",
+                "example": "Invalid IP address."
+              }
+            }
+          }
+        }
+      },
+      "BulkIPGeolocationResponse": {
+        "type": "object",
+        "description": "Map of IP address to geolocation record. Each key is a submitted address; the value contains the fields available on your plan.",
+        "additionalProperties": {
+          "$ref": "#/components/schemas/BulkIPGeolocationRecord"
+        }
+      },
+      "BulkIPGeolocationRecord": {
+        "type": "object",
+        "description": "Geolocation record for one of the submitted addresses.",
+        "properties": {
+          "country_code": {
+            "type": "string",
+            "description": "Two-character country code based on ISO 3166.",
+            "example": "US"
+          },
+          "country_name": {
+            "type": "string",
+            "description": "Country name based on ISO 3166.",
+            "example": "United States of America"
+          },
+          "region_name": {
+            "type": "string",
+            "description": "Region or state name.",
+            "example": "California"
+          },
+          "district": {
+            "type": "string",
+            "description": "District or county name. Available on the Security plan.",
+            "example": "Santa Clara County"
+          },
+          "city_name": {
+            "type": "string",
+            "description": "City name.",
+            "example": "Mountain View"
+          },
+          "latitude": {
+            "type": "number",
+            "description": "City latitude. Defaults to the capital city latitude when the city is unknown.",
+            "example": 37.38605
+          },
+          "longitude": {
+            "type": "number",
+            "description": "City longitude. Defaults to the capital city longitude when the city is unknown.",
+            "example": -122.08385
+          },
+          "zip_code": {
+            "type": "string",
+            "description": "ZIP or postal code.",
+            "example": "94035"
+          },
+          "time_zone": {
+            "type": "string",
+            "description": "UTC time zone with daylight saving time applied.",
+            "example": "-07:00"
+          },
+          "asn": {
+            "type": "string",
+            "description": "Autonomous system number (ASN).",
+            "example": "15169"
+          },
+          "as": {
+            "type": "string",
+            "description": "Autonomous system (AS) name.",
+            "example": "Google LLC"
+          },
+          "as_info": {
+            "$ref": "#/components/schemas/ASInfo"
+          },
+          "isp": {
+            "type": "string",
+            "description": "Internet Service Provider or company name. Available on the Starter plan and above.",
+            "example": "Google LLC"
+          },
+          "domain": {
+            "type": "string",
+            "description": "Internet domain name associated with the IP address range. Available on the Starter plan and above.",
+            "example": "google.com"
+          },
+          "net_speed": {
+            "type": "string",
+            "enum": [
+              "DIAL",
+              "DSL",
+              "COMP",
+              "T1",
+              "SAT"
+            ],
+            "description": "Internet connection type. DIAL = dial-up, DSL = broadband/cable/fibre/mobile, COMP = corporate, T1 = data centre/transit, SAT = satellite. Available on the Starter plan and above.",
+            "example": "T1"
+          },
+          "idd_code": {
+            "type": "string",
+            "description": "IDD prefix used to call the city from another country. Available on the Starter plan and above.",
+            "example": "1"
+          },
+          "area_code": {
+            "type": "string",
+            "description": "Area code for calls between cities. Available on the Starter plan and above.",
+            "example": "650"
+          },
+          "weather_station_code": {
+            "type": "string",
+            "description": "Code of the nearest weather observation station. Available on the Starter plan and above.",
+            "example": "USCA0746"
+          },
+          "weather_station_name": {
+            "type": "string",
+            "description": "Name of the nearest weather observation station. Available on the Starter plan and above.",
+            "example": "Mountain View"
+          },
+          "mcc": {
+            "type": "string",
+            "nullable": true,
+            "description": "Mobile Country Code (ITU E.212), or null when unknown. Available on the Plus plan and above.",
+            "example": "-"
+          },
+          "mnc": {
+            "type": "string",
+            "nullable": true,
+            "description": "Mobile Network Code, or null when unknown. Available on the Plus plan and above.",
+            "example": "-"
+          },
+          "mobile_brand": {
+            "type": "string",
+            "nullable": true,
+            "description": "Commercial brand associated with the mobile carrier, or null when unknown. Available on the Plus plan and above.",
+            "example": "-"
+          },
+          "elevation": {
+            "type": "number",
+            "description": "Average height of the city above sea level, in metres. Available on the Starter plan and above.",
+            "example": 32
+          },
+          "usage_type": {
+            "type": "string",
+            "enum": [
+              "COM",
+              "ORG",
+              "GOV",
+              "MIL",
+              "EDU",
+              "LIB",
+              "CDN",
+              "ISP",
+              "MOB",
+              "DCH",
+              "SES",
+              "AIC",
+              "RSV",
+              "ISP/MOB"
+            ],
+            "description": "Usage type classification of the ISP or company. Available on the Starter plan and above.",
+            "example": "DCH"
+          },
+          "address_type": {
+            "type": "string",
+            "enum": [
+              "Anycast",
+              "Unicast",
+              "Multicast",
+              "Broadcast"
+            ],
+            "description": "IP address type. Available on the Plus plan and above.",
+            "example": "Anycast"
+          },
+          "ads_category": {
+            "type": "string",
+            "description": "Domain category code based on the IAB Tech Lab Content Taxonomy v3.1. Available on the Security plan.",
+            "example": "622"
+          },
+          "ads_category_name": {
+            "type": "string",
+            "description": "Domain category name based on the IAB Tech Lab Content Taxonomy v3.1, or \"-\" when unclassified. Available on the Security plan.",
+            "example": "Web Hosting"
+          },
+          "continent": {
+            "$ref": "#/components/schemas/Continent"
+          },
+          "country": {
+            "$ref": "#/components/schemas/Country"
+          },
+          "region": {
+            "$ref": "#/components/schemas/Region"
+          },
+          "city": {
+            "$ref": "#/components/schemas/City"
+          },
+          "time_zone_info": {
+            "$ref": "#/components/schemas/TimeZoneInfo"
+          },
+          "geotargeting": {
+            "$ref": "#/components/schemas/Geotargeting"
+          },
+          "is_proxy": {
+            "type": "boolean",
+            "description": "Whether the address belongs to a known proxy, VPN, Tor exit node or another masking service.",
+            "example": false
+          },
+          "fraud_score": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 99,
+            "description": "IP2Proxy fraud score from 0 to 99. A higher score means a greater likelihood of fraudulent activity. Available on the Security plan.",
+            "example": 0
+          },
+          "proxy": {
+            "$ref": "#/components/schemas/Proxy"
           }
         }
       }

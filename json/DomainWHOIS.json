@@ -2,33 +2,47 @@
   "openapi": "3.0.3",
   "info": {
     "title": "IP2WHOIS Domain WHOIS API",
-    "description": "IP2WHOIS Domain WHOIS API helps users to obtain domain information and WHOIS record by using a domain name. The WHOIS API returns a comprehensive WHOIS data such as creation date, updated date, expiration date, domain age, the contact information of the registrant, mailing address, phone number, email address, nameservers the domain is using and much more.",
+    "description": "IP2WHOIS Domain WHOIS API returns registration and contact data for a domain name: creation, update and expiry dates, domain age, registrar, registrant, administrative, technical and billing contacts, nameservers and WHOIS server.\n\n**Authentication.** Send your API key as a Bearer token in the `Authorization` header (recommended), or as the `key` query parameter. Without a key, the IP geolocation endpoint allows 1,000 requests per day from the same client IP. This endpoint requires an API key.\n\n**Privacy.** Registries and privacy services often redact contact details. Fields are returned as published, and may be empty or replaced by a referral message. Treat missing values as redacted rather than invalid.\n\nThe endpoint supports JSON and XML responses.",
     "version": "1",
+    "termsOfService": "https://www.ip2location.io/terms-of-service",
     "contact": {
-		"name": "IP2Location.io",
-		"url": "https://github.com/ip2location/ip2location-io-openapi"
-	}
+      "name": "IP2Location.io",
+      "url": "https://www.ip2location.io",
+      "email": "support@ip2location.io"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://github.com/ip2location/ip2location-io-openapi/blob/main/LICENSE"
+    }
   },
   "servers": [
     {
-      "url": "https://api.ip2whois.com/v2"
+      "url": "https://api.ip2whois.com/v2",
+      "description": "IP2WHOIS endpoint."
+    }
+  ],
+  "tags": [
+    {
+      "name": "Domain WHOIS",
+      "description": "Look up registration and contact data for a domain name."
     }
   ],
   "paths": {
     "/": {
       "get": {
-        "summary": "Domain WHOIS",
-        "description": "Check WHOIS information for a particular domain",
+        "tags": [
+          "Domain WHOIS"
+        ],
+        "summary": "Look up a domain WHOIS record",
+        "description": "Returns the WHOIS record for a domain name. Contact fields may be redacted by the registry or a privacy service.",
         "operationId": "domainWHOIS",
+        "externalDocs": {
+          "description": "Domain WHOIS API documentation",
+          "url": "https://www.ip2location.io/ip2whois-documentation"
+        },
         "parameters": [
           {
-            "name": "key",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "(required) IP2Location.io API key."
+            "$ref": "#/components/parameters/key_required"
           },
           {
             "name": "domain",
@@ -36,342 +50,217 @@
             "required": true,
             "schema": {
               "type": "string",
+              "format": "hostname",
               "example": "locaproxy.com"
             },
-            "description": "(required) Domain name."
+            "description": "Domain name to look up."
           },
           {
-            "name": "format",
-            "in": "query",
-            "schema": {
-              "enum": [
-                "json",
-                "xml"
-              ],
-              "type": "string",
-              "default": "json"
-            },
-            "description": "(optional) Format of the response message. Default is json."
+            "$ref": "#/components/parameters/format_json_xml"
           }
         ],
         "responses": {
           "200": {
-            "description": "Get response from domain WHOIS",
+            "description": "WHOIS record for the domain.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "admin": {
-                      "type": "object",
-                      "properties": {
-                        "city": {
-                          "type": "string",
-                          "example": "Tempe"
-                        },
-                        "country": {
-                          "type": "string",
-                          "example": "US"
-                        },
-                        "email": {
-                          "type": "string",
-                          "example": "Select Contact Domain Holder link at https://www.godaddy.com/whois/results.aspx?domain=LOCAPROXY.COM"
-                        },
-                        "fax": {
-                          "type": "string",
-                          "example": "+1.4806242598"
-                        },
-                        "name": {
-                          "type": "string",
-                          "example": "Registration Private"
-                        },
-                        "organization": {
-                          "type": "string",
-                          "example": "Domains By Proxy, LLC"
-                        },
-                        "phone": {
-                          "type": "string",
-                          "example": "+1.4806242599"
-                        },
-                        "region": {
-                          "type": "string",
-                          "example": "Arizona"
-                        },
-                        "street_address": {
-                          "type": "string",
-                          "example": "DomainsByProxy.com"
-                        },
-                        "zip_code": {
-                          "type": "string",
-                          "example": "85284"
-                        }
-                      }
-                    },
-                    "billing": {
-                      "type": "object",
-                      "properties": {
-                        "city": {
-                          "type": "string",
-                          "example": "Tempe"
-                        },
-                        "country": {
-                          "type": "string",
-                          "example": "US"
-                        },
-                        "email": {
-                          "type": "string",
-                          "example": "Select Contact Domain Holder link at https://www.godaddy.com/whois/results.aspx?domain=LOCAPROXY.COM"
-                        },
-                        "fax": {
-                          "type": "string",
-                          "example": "+1.4806242598"
-                        },
-                        "name": {
-                          "type": "string",
-                          "example": "Registration Private"
-                        },
-                        "organization": {
-                          "type": "string",
-                          "example": "Domains By Proxy, LLC"
-                        },
-                        "phone": {
-                          "type": "string",
-                          "example": "+1.4806242599"
-                        },
-                        "region": {
-                          "type": "string",
-                          "example": "Arizona"
-                        },
-                        "street_address": {
-                          "type": "string",
-                          "example": "DomainsByProxy.com"
-                        },
-                        "zip_code": {
-                          "type": "string",
-                          "example": "85284"
-                        }
-                      }
-                    },
-                    "create_date": {
-                      "type": "string",
-                      "example": "2012-04-03T02:34:32Z"
-                    },
-                    "domain": {
-                      "type": "string",
-                      "example": "locaproxy.com"
-                    },
-                    "domain_age": {
-                      "type": "number",
-                      "example": 3863
-                    },
-                    "domain_id": {
-                      "type": "string",
-                      "example": "1710914405_DOMAIN_COM-VRSN"
-                    },
-                    "expire_date": {
-                      "type": "string",
-                      "example": "2024-04-03T02:34:32Z"
-                    },
-                    "nameservers": {
-                      "type": "array",
-                      "items": {
-                        "type": "string",
-                        "example": "vera.ns.cloudflare.com"
-                      },
-                      "example": [
-                        "vera.ns.cloudflare.com",
-                        "walt.ns.cloudflare.com"
-                      ]
-                    },
-                    "registrant": {
-                      "type": "object",
-                      "properties": {
-                        "city": {
-                          "type": "string",
-                          "example": "Tempe"
-                        },
-                        "country": {
-                          "type": "string",
-                          "example": "US"
-                        },
-                        "email": {
-                          "type": "string",
-                          "example": "Select Contact Domain Holder link at https://www.godaddy.com/whois/results.aspx?domain=LOCAPROXY.COM"
-                        },
-                        "fax": {
-                          "type": "string",
-                          "example": "+1.4806242598"
-                        },
-                        "name": {
-                          "type": "string",
-                          "example": "Registration Private"
-                        },
-                        "organization": {
-                          "type": "string",
-                          "example": "Domains By Proxy, LLC"
-                        },
-                        "phone": {
-                          "type": "string",
-                          "example": "+1.4806242599"
-                        },
-                        "region": {
-                          "type": "string",
-                          "example": "Arizona"
-                        },
-                        "street_address": {
-                          "type": "string",
-                          "example": "DomainsByProxy.com"
-                        },
-                        "zip_code": {
-                          "type": "string",
-                          "example": "85284"
-                        }
-                      }
-                    },
-                    "registrar": {
-                      "type": "object",
-                      "properties": {
-                        "iana_id": {
-                          "type": "string",
-                          "example": "146"
-                        },
-                        "name": {
-                          "type": "string",
-                          "example": "GoDaddy.com, LLC"
-                        },
-                        "url": {
-                          "type": "string",
-                          "example": "https://www.godaddy.com"
-                        }
-                      }
-                    },
-                    "status": {
-                      "type": "string",
-                      "example": "clientTransferProhibited https://icann.org/epp#clientTransferProhibited"
-                    },
-                    "tech": {
-                      "type": "object",
-                      "properties": {
-                        "city": {
-                          "type": "string",
-                          "example": "Tempe"
-                        },
-                        "country": {
-                          "type": "string",
-                          "example": "US"
-                        },
-                        "email": {
-                          "type": "string",
-                          "example": "Select Contact Domain Holder link at https://www.godaddy.com/whois/results.aspx?domain=LOCAPROXY.COM"
-                        },
-                        "fax": {
-                          "type": "string",
-                          "example": "+1.4806242598"
-                        },
-                        "name": {
-                          "type": "string",
-                          "example": "Registration Private"
-                        },
-                        "organization": {
-                          "type": "string",
-                          "example": "Domains By Proxy, LLC"
-                        },
-                        "phone": {
-                          "type": "string",
-                          "example": "+1.4806242599"
-                        },
-                        "region": {
-                          "type": "string",
-                          "example": "Arizona"
-                        },
-                        "street_address": {
-                          "type": "string",
-                          "example": "DomainsByProxy.com"
-                        },
-                        "zip_code": {
-                          "type": "string",
-                          "example": "85284"
-                        }
-                      }
-                    },
-                    "update_date": {
-                      "type": "string",
-                      "example": "2021-12-03T02:54:57Z"
-                    },
-                    "whois_server": {
-                      "type": "string",
-                      "example": "whois.godaddy.com"
-                    }
-                  }
+                  "$ref": "#/components/schemas/DomainWHOISResponse"
                 },
                 "examples": {
                   "Domain WHOIS": {
                     "value": {
-                      "admin": {
-                        "city": "Tempe",
-                        "country": "US",
-                        "email": "Select Contact Domain Holder link at https://www.godaddy.com/whois/results.aspx?domain=LOCAPROXY.COM",
-                        "fax": "+1.4806242598",
-                        "name": "Registration Private",
-                        "organization": "Domains By Proxy, LLC",
-                        "phone": "+1.4806242599",
-                        "region": "Arizona",
-                        "street_address": "DomainsByProxy.com",
-                        "zip_code": "85284"
-                      },
-                      "billing": {
-                        "city": "",
-                        "country": "",
-                        "email": "",
-                        "fax": "",
-                        "name": "",
-                        "organization": "",
-                        "phone": "",
-                        "region": "",
-                        "street_address": "",
-                        "zip_code": ""
-                      },
-                      "create_date": "2012-04-03T02:34:32Z",
                       "domain": "locaproxy.com",
-                      "domain_age": 3863,
                       "domain_id": "1710914405_DOMAIN_COM-VRSN",
+                      "status": "clientTransferProhibited https://icann.org/epp#clientTransferProhibited",
+                      "create_date": "2012-04-03T02:34:32Z",
+                      "update_date": "2021-12-03T02:54:57Z",
                       "expire_date": "2024-04-03T02:34:32Z",
-                      "nameservers": [
-                        "vera.ns.cloudflare.com",
-                        "walt.ns.cloudflare.com"
-                      ],
-                      "registrant": {
-                        "city": "Tempe",
-                        "country": "US",
-                        "email": "Select Contact Domain Holder link at https://www.godaddy.com/whois/results.aspx?domain=LOCAPROXY.COM",
-                        "fax": "+1.4806242598",
-                        "name": "Registration Private",
-                        "organization": "Domains By Proxy, LLC",
-                        "phone": "+1.4806242599",
-                        "region": "Arizona",
-                        "street_address": "DomainsByProxy.com",
-                        "zip_code": "85284"
-                      },
+                      "domain_age": 3863,
+                      "whois_server": "whois.godaddy.com",
                       "registrar": {
                         "iana_id": "146",
                         "name": "GoDaddy.com, LLC",
                         "url": "https://www.godaddy.com"
                       },
-                      "status": "clientTransferProhibited https://icann.org/epp#clientTransferProhibited",
-                      "tech": {
-                        "city": "Tempe",
-                        "country": "US",
-                        "email": "Select Contact Domain Holder link at https://www.godaddy.com/whois/results.aspx?domain=LOCAPROXY.COM",
-                        "fax": "+1.4806242598",
+                      "registrant": {
                         "name": "Registration Private",
                         "organization": "Domains By Proxy, LLC",
-                        "phone": "+1.4806242599",
-                        "region": "Arizona",
                         "street_address": "DomainsByProxy.com",
-                        "zip_code": "85284"
+                        "city": "Tempe",
+                        "region": "Arizona",
+                        "zip_code": "85284",
+                        "country": "US",
+                        "phone": "+1.4806242599",
+                        "fax": "+1.4806242598",
+                        "email": "Select Contact Domain Holder link at https://www.godaddy.com/whois/results.aspx?domain=LOCAPROXY.COM"
                       },
-                      "update_date": "2021-12-03T02:54:57Z",
-                      "whois_server": "whois.godaddy.com"
+                      "admin": {
+                        "name": "Registration Private",
+                        "organization": "Domains By Proxy, LLC",
+                        "street_address": "DomainsByProxy.com",
+                        "city": "Tempe",
+                        "region": "Arizona",
+                        "zip_code": "85284",
+                        "country": "US",
+                        "phone": "+1.4806242599",
+                        "fax": "+1.4806242598",
+                        "email": "Select Contact Domain Holder link at https://www.godaddy.com/whois/results.aspx?domain=LOCAPROXY.COM"
+                      },
+                      "tech": {
+                        "name": "Registration Private",
+                        "organization": "Domains By Proxy, LLC",
+                        "street_address": "DomainsByProxy.com",
+                        "city": "Tempe",
+                        "region": "Arizona",
+                        "zip_code": "85284",
+                        "country": "US",
+                        "phone": "+1.4806242599",
+                        "fax": "+1.4806242598",
+                        "email": "Select Contact Domain Holder link at https://www.godaddy.com/whois/results.aspx?domain=LOCAPROXY.COM"
+                      },
+                      "billing": {
+                        "name": "",
+                        "organization": "",
+                        "street_address": "",
+                        "city": "",
+                        "region": "",
+                        "zip_code": "",
+                        "country": "",
+                        "phone": "",
+                        "fax": "",
+                        "email": ""
+                      },
+                      "nameservers": [
+                        "vera.ns.cloudflare.com",
+                        "walt.ns.cloudflare.com"
+                      ]
+                    }
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "<result>\n  <domain>locaproxy.com</domain>\n  <domain_id>1710914405_DOMAIN_COM-VRSN</domain_id>\n  <status>clientTransferProhibited https://icann.org/epp#clientTransferProhibited</status>\n  <create_date>2012-04-03T02:34:32Z</create_date>\n  <update_date>2021-12-03T02:54:57Z</update_date>\n  <expire_date>2024-04-03T02:34:32Z</expire_date>\n  <domain_age>3863</domain_age>\n  <whois_server>whois.godaddy.com</whois_server>\n  <nameservers>\n    <item>vera.ns.cloudflare.com</item>\n    <item>walt.ns.cloudflare.com</item>\n  </nameservers>\n</result>"
+              }
+            }
+          },
+          "400": {
+            "description": "Missing parameter, invalid domain, or invalid format.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "Missing parameter": {
+                    "value": {
+                      "error": {
+                        "error_code": 10000,
+                        "error_message": "Missing parameter."
+                      }
+                    }
+                  },
+                  "Invalid domain": {
+                    "value": {
+                      "error": {
+                        "error_code": 10007,
+                        "error_message": "Invalid domain."
+                      }
+                    }
+                  },
+                  "Invalid format": {
+                    "value": {
+                      "error": {
+                        "error_code": 10008,
+                        "error_message": "Invalid format."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "API key not found, disabled, expired, or out of queries.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "API key not found": {
+                    "value": {
+                      "error": {
+                        "error_code": 10001,
+                        "error_message": "API key not found."
+                      }
+                    }
+                  },
+                  "API key disabled": {
+                    "value": {
+                      "error": {
+                        "error_code": 10002,
+                        "error_message": "API key disabled."
+                      }
+                    }
+                  },
+                  "API key expired": {
+                    "value": {
+                      "error": {
+                        "error_code": 10003,
+                        "error_message": "API key expired."
+                      }
+                    }
+                  },
+                  "Insufficient queries": {
+                    "value": {
+                      "error": {
+                        "error_code": 10004,
+                        "error_message": "Insufficient queries."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No WHOIS data found for the domain.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "No data found": {
+                    "value": {
+                      "error": {
+                        "error_code": 10006,
+                        "error_message": "No data found."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unknown error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "Unknown error": {
+                    "value": {
+                      "error": {
+                        "error_code": 10005,
+                        "error_message": "Unknown error."
+                      }
                     }
                   }
                 }
@@ -381,6 +270,9 @@
         },
         "security": [
           {
+            "bearerAuth": []
+          },
+          {
             "apiKey": []
           }
         ]
@@ -389,10 +281,228 @@
   },
   "components": {
     "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "API key sent as `Authorization: Bearer {YOUR_API_KEY}`. This is the recommended method because it keeps the key out of URLs, logs and browser history."
+      },
       "apiKey": {
         "type": "apiKey",
-        "name": "Authorization",
-        "in": "query"
+        "in": "query",
+        "name": "key",
+        "description": "API key sent as the `key` query parameter. Supported as an alternative to the Bearer token, but less secure because the key appears in the URL."
+      }
+    },
+    "parameters": {
+      "key_required": {
+        "name": "key",
+        "in": "query",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "API key. Required unless the `Authorization: Bearer` header is sent. Get a free key at https://www.ip2location.io/sign-up."
+      },
+      "format_json_xml": {
+        "name": "format",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "json",
+            "xml"
+          ],
+          "default": "json"
+        },
+        "description": "Response format. Defaults to `json`."
+      }
+    },
+    "schemas": {
+      "ErrorResponse": {
+        "type": "object",
+        "description": "Error envelope returned for every failed request.",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "type": "object",
+            "required": [
+              "error_code",
+              "error_message"
+            ],
+            "properties": {
+              "error_code": {
+                "type": "integer",
+                "description": "Numeric error code, unique within the API.",
+                "example": 10001
+              },
+              "error_message": {
+                "type": "string",
+                "description": "Human-readable error message.",
+                "example": "Invalid IP address."
+              }
+            }
+          }
+        }
+      },
+      "Contact": {
+        "type": "object",
+        "description": "WHOIS contact details. Fields are omitted or empty when the registry redacts them.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Contact name.",
+            "example": "Registration Private"
+          },
+          "organization": {
+            "type": "string",
+            "description": "Contact organisation.",
+            "example": "Domains By Proxy, LLC"
+          },
+          "street_address": {
+            "type": "string",
+            "description": "Street address.",
+            "example": "DomainsByProxy.com"
+          },
+          "city": {
+            "type": "string",
+            "description": "City.",
+            "example": "Tempe"
+          },
+          "region": {
+            "type": "string",
+            "description": "Region or state.",
+            "example": "Arizona"
+          },
+          "zip_code": {
+            "type": "string",
+            "description": "ZIP or postal code.",
+            "example": "85284"
+          },
+          "country": {
+            "type": "string",
+            "description": "Country code.",
+            "example": "US"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Phone number.",
+            "example": "+1.4806242599"
+          },
+          "fax": {
+            "type": "string",
+            "description": "Fax number.",
+            "example": "+1.4806242598"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email address.",
+            "example": "Select Contact Domain Holder link at https://www.godaddy.com/whois/results.aspx?domain=LOCAPROXY.COM"
+          }
+        }
+      },
+      "Registrar": {
+        "type": "object",
+        "description": "Registrar that sponsors the domain.",
+        "properties": {
+          "iana_id": {
+            "type": "string",
+            "description": "Registrar IANA ID.",
+            "example": "146"
+          },
+          "name": {
+            "type": "string",
+            "description": "Registrar name.",
+            "example": "GoDaddy.com, LLC"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Registrar website.",
+            "example": "https://www.godaddy.com"
+          }
+        }
+      },
+      "DomainWHOISResponse": {
+        "type": "object",
+        "description": "WHOIS record for one domain.",
+        "required": [
+          "domain"
+        ],
+        "properties": {
+          "domain": {
+            "type": "string",
+            "description": "Domain name.",
+            "example": "locaproxy.com"
+          },
+          "domain_id": {
+            "type": "string",
+            "description": "Domain name ID assigned by the registry.",
+            "example": "1710914405_DOMAIN_COM-VRSN"
+          },
+          "status": {
+            "type": "string",
+            "description": "Domain status, including the EPP status code and its ICANN reference.",
+            "example": "clientTransferProhibited https://icann.org/epp#clientTransferProhibited"
+          },
+          "create_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Domain creation date.",
+            "example": "2012-04-03T02:34:32Z"
+          },
+          "update_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date of the last domain update.",
+            "example": "2021-12-03T02:54:57Z"
+          },
+          "expire_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Domain expiration date.",
+            "example": "2024-04-03T02:34:32Z"
+          },
+          "domain_age": {
+            "type": "integer",
+            "description": "Domain age in days.",
+            "example": 3863
+          },
+          "whois_server": {
+            "type": "string",
+            "description": "WHOIS server that answered the query.",
+            "example": "whois.godaddy.com"
+          },
+          "registrar": {
+            "$ref": "#/components/schemas/Registrar"
+          },
+          "registrant": {
+            "$ref": "#/components/schemas/Contact"
+          },
+          "admin": {
+            "$ref": "#/components/schemas/Contact"
+          },
+          "tech": {
+            "$ref": "#/components/schemas/Contact"
+          },
+          "billing": {
+            "$ref": "#/components/schemas/Contact"
+          },
+          "nameservers": {
+            "type": "array",
+            "description": "Nameservers configured for the domain.",
+            "items": {
+              "type": "string",
+              "example": "vera.ns.cloudflare.com"
+            },
+            "example": [
+              "vera.ns.cloudflare.com",
+              "walt.ns.cloudflare.com"
+            ]
+          }
+        }
       }
     }
   }
