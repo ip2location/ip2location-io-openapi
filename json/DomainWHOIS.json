@@ -1,10 +1,10 @@
 {
-  "openapi": "3.2.1",
+  "openapi": "3.2.0",
   "info": {
     "title": "IP2WHOIS Domain WHOIS API",
     "summary": "Domain WHOIS",
-    "description": "IP2WHOIS Domain WHOIS API returns registration and contact data for a domain name: creation, update and expiry dates, domain age, registrar, registrant, administrative, technical and billing contacts, nameservers and WHOIS server.\n\n**Authentication.** Send your API key as a Bearer token in the `Authorization` header (recommended), or as the `key` query parameter. Without a key, the IP geolocation endpoint allows 1,000 requests per day from the same client IP. This endpoint requires an API key.\n\n**Privacy.** Registries and privacy services often redact contact details. Fields are returned as published, and may be empty or replaced by a referral message. Treat missing values as redacted rather than invalid.\n\nThe endpoint supports JSON and XML responses.",
-    "version": "1",
+    "description": "IP2WHOIS Domain WHOIS API returns registration and contact data for a domain name: creation, update and expiry dates, domain age, registrar, registrant, administrative, technical and billing contacts, nameservers and WHOIS server.\n\n**Authentication.** Send your API key as a Bearer token in the `Authorization` header (recommended), or as the `key` query parameter. This endpoint requires an API key.\n\n**Privacy.** Registries and privacy services often redact contact details. Fields are returned as published, and may be empty or replaced by a referral message. Treat missing values as redacted rather than invalid.\n\nThe endpoint supports JSON and XML responses.",
+    "version": "1.0.0",
     "termsOfService": "https://www.ip2location.io/terms-of-service",
     "contact": {
       "name": "IP2Location.io",
@@ -52,9 +52,7 @@
             "schema": {
               "type": "string",
               "format": "hostname",
-              "examples": [
-                "locaproxy.com"
-              ]
+              "example": "locaproxy.com"
             },
             "description": "Domain name to look up."
           },
@@ -78,8 +76,8 @@
                       "status": "clientTransferProhibited https://icann.org/epp#clientTransferProhibited",
                       "create_date": "2012-04-03T02:34:32Z",
                       "update_date": "2021-12-03T02:54:57Z",
-                      "expire_date": "2024-04-03T02:34:32Z",
-                      "domain_age": 3863,
+                      "expire_date": "2027-04-03T07:34:32Z",
+                      "domain_age": 5340,
                       "whois_server": "whois.godaddy.com",
                       "registrar": {
                         "iana_id": "146",
@@ -144,9 +142,10 @@
               },
               "application/xml": {
                 "schema": {
-                  "type": "string"
+                  "type": "string",
+                  "description": "XML representation of the same fields as the JSON response, with a root `<result>` element."
                 },
-                "example": "<result>\n  <domain>locaproxy.com</domain>\n  <domain_id>1710914405_DOMAIN_COM-VRSN</domain_id>\n  <status>clientTransferProhibited https://icann.org/epp#clientTransferProhibited</status>\n  <create_date>2012-04-03T02:34:32Z</create_date>\n  <update_date>2021-12-03T02:54:57Z</update_date>\n  <expire_date>2024-04-03T02:34:32Z</expire_date>\n  <domain_age>3863</domain_age>\n  <whois_server>whois.godaddy.com</whois_server>\n  <nameservers>\n    <item>vera.ns.cloudflare.com</item>\n    <item>walt.ns.cloudflare.com</item>\n  </nameservers>\n</result>"
+                "example": "<result>\n  <domain>locaproxy.com</domain>\n  <domain_id>1710914405_DOMAIN_COM-VRSN</domain_id>\n  <status>clientTransferProhibited https://icann.org/epp#clientTransferProhibited</status>\n  <create_date>2012-04-03T02:34:32Z</create_date>\n  <update_date>2021-12-03T02:54:57Z</update_date>\n  <expire_date>2027-04-03T07:34:32Z</expire_date>\n  <domain_age>5340</domain_age>\n  <whois_server>whois.godaddy.com</whois_server>\n  <nameservers>\n    <item>vera.ns.cloudflare.com</item>\n    <item>walt.ns.cloudflare.com</item>\n  </nameservers>\n</result>"
               }
             }
           },
@@ -300,11 +299,11 @@
       "key_required": {
         "name": "key",
         "in": "query",
-        "required": true,
+        "required": false,
         "schema": {
           "type": "string"
         },
-        "description": "API key. Required unless the `Authorization: Bearer` header is sent. Get a free key at https://www.ip2location.io/sign-up."
+        "description": "API key. Optional when the key is sent as an `Authorization: Bearer` token. Get a free key at https://www.ip2location.io/sign-up."
       },
       "format_json_xml": {
         "name": "format",
@@ -339,16 +338,12 @@
               "error_code": {
                 "type": "integer",
                 "description": "Numeric error code, unique within the API.",
-                "examples": [
-                  10001
-                ]
+                "example": 10001
               },
               "error_message": {
                 "type": "string",
                 "description": "Human-readable error message.",
-                "examples": [
-                  "Invalid IP address."
-                ]
+                "example": "Invalid IP address."
               }
             }
           }
@@ -361,72 +356,52 @@
           "name": {
             "type": "string",
             "description": "Contact name.",
-            "examples": [
-              "Registration Private"
-            ]
+            "example": "Registration Private"
           },
           "organization": {
             "type": "string",
             "description": "Contact organisation.",
-            "examples": [
-              "Domains By Proxy, LLC"
-            ]
+            "example": "Domains By Proxy, LLC"
           },
           "street_address": {
             "type": "string",
             "description": "Street address.",
-            "examples": [
-              "DomainsByProxy.com"
-            ]
+            "example": "DomainsByProxy.com"
           },
           "city": {
             "type": "string",
             "description": "City.",
-            "examples": [
-              "Tempe"
-            ]
+            "example": "Tempe"
           },
           "region": {
             "type": "string",
             "description": "Region or state.",
-            "examples": [
-              "Arizona"
-            ]
+            "example": "Arizona"
           },
           "zip_code": {
             "type": "string",
             "description": "ZIP or postal code.",
-            "examples": [
-              "85284"
-            ]
+            "example": "85284"
           },
           "country": {
             "type": "string",
             "description": "Country code.",
-            "examples": [
-              "US"
-            ]
+            "example": "US"
           },
           "phone": {
             "type": "string",
             "description": "Phone number.",
-            "examples": [
-              "+1.4806242599"
-            ]
+            "example": "+1.4806242599"
           },
           "fax": {
             "type": "string",
             "description": "Fax number.",
-            "examples": [
-              "+1.4806242598"
-            ]
+            "example": "+1.4806242598"
           },
           "email": {
             "type": "string",
             "description": "Email address.",
-            "examples": [
-              "Select Contact Domain Holder link at https://www.godaddy.com/whois/results.aspx?domain=LOCAPROXY.COM"
-            ]
+            "example": "Select Contact Domain Holder link at https://www.godaddy.com/whois/results.aspx?domain=LOCAPROXY.COM"
           }
         }
       },
@@ -437,24 +412,18 @@
           "iana_id": {
             "type": "string",
             "description": "Registrar IANA ID.",
-            "examples": [
-              "146"
-            ]
+            "example": "146"
           },
           "name": {
             "type": "string",
             "description": "Registrar name.",
-            "examples": [
-              "GoDaddy.com, LLC"
-            ]
+            "example": "GoDaddy.com, LLC"
           },
           "url": {
             "type": "string",
             "format": "uri",
             "description": "Registrar website.",
-            "examples": [
-              "https://www.godaddy.com"
-            ]
+            "example": "https://www.godaddy.com"
           }
         }
       },
@@ -468,61 +437,45 @@
           "domain": {
             "type": "string",
             "description": "Domain name.",
-            "examples": [
-              "locaproxy.com"
-            ]
+            "example": "locaproxy.com"
           },
           "domain_id": {
             "type": "string",
             "description": "Domain name ID assigned by the registry.",
-            "examples": [
-              "1710914405_DOMAIN_COM-VRSN"
-            ]
+            "example": "1710914405_DOMAIN_COM-VRSN"
           },
           "status": {
             "type": "string",
             "description": "Domain status, including the EPP status code and its ICANN reference.",
-            "examples": [
-              "clientTransferProhibited https://icann.org/epp#clientTransferProhibited"
-            ]
+            "example": "clientTransferProhibited https://icann.org/epp#clientTransferProhibited"
           },
           "create_date": {
             "type": "string",
             "format": "date-time",
             "description": "Domain creation date.",
-            "examples": [
-              "2012-04-03T02:34:32Z"
-            ]
+            "example": "2012-04-03T02:34:32Z"
           },
           "update_date": {
             "type": "string",
             "format": "date-time",
             "description": "Date of the last domain update.",
-            "examples": [
-              "2021-12-03T02:54:57Z"
-            ]
+            "example": "2021-12-03T02:54:57Z"
           },
           "expire_date": {
             "type": "string",
             "format": "date-time",
             "description": "Domain expiration date.",
-            "examples": [
-              "2024-04-03T02:34:32Z"
-            ]
+            "example": "2027-04-03T07:34:32Z"
           },
           "domain_age": {
             "type": "integer",
             "description": "Domain age in days.",
-            "examples": [
-              3863
-            ]
+            "example": 5340
           },
           "whois_server": {
             "type": "string",
             "description": "WHOIS server that answered the query.",
-            "examples": [
-              "whois.godaddy.com"
-            ]
+            "example": "whois.godaddy.com"
           },
           "registrar": {
             "$ref": "#/components/schemas/Registrar"
@@ -544,15 +497,11 @@
             "description": "Nameservers configured for the domain.",
             "items": {
               "type": "string",
-              "examples": [
-                "vera.ns.cloudflare.com"
-              ]
+              "example": "vera.ns.cloudflare.com"
             },
-            "examples": [
-              [
-                "vera.ns.cloudflare.com",
-                "walt.ns.cloudflare.com"
-              ]
+            "example": [
+              "vera.ns.cloudflare.com",
+              "walt.ns.cloudflare.com"
             ]
           }
         }

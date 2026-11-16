@@ -1,10 +1,10 @@
 {
-  "openapi": "3.2.1",
+  "openapi": "3.2.0",
   "info": {
     "title": "IP2WHOIS Hosted Domain API",
     "summary": "Hosted Domain",
-    "description": "IP2WHOIS Hosted Domain API returns the domain names hosted on an IP address, in real time, for IPv4 and IPv6.\n\n**Authentication.** Send your API key as a Bearer token in the `Authorization` header (recommended), or as the `key` query parameter. Without a key, the IP geolocation endpoint allows 1,000 requests per day from the same client IP. This endpoint requires an API key.\n\n**Pagination.** Results are returned 100 domains at a time on the Security plan (1 on Free, 5 on Starter, 20 on Plus). Read `total_pages` from the first response and request each `page` in turn until every page has been read.\n\nThe endpoint supports JSON and XML responses.",
-    "version": "1",
+    "description": "IP2WHOIS Hosted Domain API returns the domain names hosted on an IP address, in real time, for IPv4 and IPv6.\n\n**Authentication.** Send your API key as a Bearer token in the `Authorization` header (recommended), or as the `key` query parameter. This endpoint requires an API key.\n\n**Pagination.** Results are returned 100 domains at a time on the Security plan (1 on Free, 5 on Starter, 20 on Plus). Read `total_pages` from the first response and request each `page` in turn until every page has been read.\n\nThe endpoint supports JSON and XML responses.",
+    "version": "1.0.0",
     "termsOfService": "https://www.ip2location.io/terms-of-service",
     "contact": {
       "name": "IP2Location.io",
@@ -18,7 +18,7 @@
   },
   "servers": [
     {
-      "url": "https://domains.ip2whois.com/domains",
+      "url": "https://domains.ip2whois.com",
       "description": "Hosted Domain endpoint."
     }
   ],
@@ -29,7 +29,7 @@
     }
   ],
   "paths": {
-    "/": {
+    "/domains": {
       "get": {
         "tags": [
           "Hosted Domain"
@@ -82,7 +82,8 @@
               },
               "application/xml": {
                 "schema": {
-                  "type": "string"
+                  "type": "string",
+                  "description": "XML representation of the same fields as the JSON response, with a root `<result>` element."
                 },
                 "example": "<result>\n  <ip>8.8.8.8</ip>\n  <total_domains>3857</total_domains>\n  <page>1</page>\n  <per_page>100</per_page>\n  <total_pages>39</total_pages>\n  <domains>\n    <item>000180.top</item>\n    <item>00100tet.xyz</item>\n    <item>001hash.vip</item>\n  </domains>\n</result>"
               }
@@ -226,11 +227,11 @@
       "key_required": {
         "name": "key",
         "in": "query",
-        "required": true,
+        "required": false,
         "schema": {
           "type": "string"
         },
-        "description": "API key. Required unless the `Authorization: Bearer` header is sent. Get a free key at https://www.ip2location.io/sign-up."
+        "description": "API key. Optional when the key is sent as an `Authorization: Bearer` token. Get a free key at https://www.ip2location.io/sign-up."
       },
       "ip_required": {
         "name": "ip",
@@ -239,9 +240,7 @@
         "schema": {
           "type": "string",
           "format": "ip",
-          "examples": [
-            "8.8.8.8"
-          ]
+          "example": "8.8.8.8"
         },
         "description": "IPv4 or IPv6 address to look up."
       },
@@ -267,9 +266,7 @@
           "type": "integer",
           "minimum": 1,
           "default": 1,
-          "examples": [
-            1
-          ]
+          "example": 1
         },
         "description": "Page of hosted domains to return. Increment it until `total_pages` is reached. Defaults to the first page."
       }
@@ -292,16 +289,12 @@
               "error_code": {
                 "type": "integer",
                 "description": "Numeric error code, unique within the API.",
-                "examples": [
-                  10001
-                ]
+                "example": 10001
               },
               "error_message": {
                 "type": "string",
                 "description": "Human-readable error message.",
-                "examples": [
-                  "Invalid IP address."
-                ]
+                "example": "Invalid IP address."
               }
             }
           }
@@ -319,54 +312,40 @@
             "type": "string",
             "format": "ip",
             "description": "IP address that was looked up.",
-            "examples": [
-              "8.8.8.8"
-            ]
+            "example": "8.8.8.8"
           },
           "total_domains": {
             "type": "integer",
             "description": "Total number of hosted domains found for the address.",
-            "examples": [
-              3857
-            ]
+            "example": 3857
           },
           "page": {
             "type": "integer",
             "minimum": 1,
             "description": "Current page number.",
-            "examples": [
-              1
-            ]
+            "example": 1
           },
           "per_page": {
             "type": "integer",
             "description": "Number of domains returned per page. Free: 1, Starter: 5, Plus: 20, Security: 100.",
-            "examples": [
-              100
-            ]
+            "example": 100
           },
           "total_pages": {
             "type": "integer",
             "description": "Total number of pages for the address.",
-            "examples": [
-              39
-            ]
+            "example": 39
           },
           "domains": {
             "type": "array",
             "description": "Domain names hosted on the address, one page at a time.",
             "items": {
               "type": "string",
-              "examples": [
-                "000180.top"
-              ]
+              "example": "000180.top"
             },
-            "examples": [
-              [
-                "000180.top",
-                "00100tet.xyz",
-                "001hash.vip"
-              ]
+            "example": [
+              "000180.top",
+              "00100tet.xyz",
+              "001hash.vip"
             ]
           }
         }

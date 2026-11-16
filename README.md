@@ -24,7 +24,7 @@ API definitions in this repository are organized into two sub-folders:
    /yaml – Definition files in the yaml format.
 ```
 
-Both folders contain the same four definitions. Use whichever format your tooling prefers.
+Both folders contain the same four definitions. The JSON files are the source of truth; the YAML files mirror them, and CI checks that the two stay in sync. Use whichever format your tooling prefers.
 
 ## Authentication
 
@@ -61,13 +61,13 @@ Failed requests return an error object with a numeric code and a message:
 }
 ```
 
-Each definition lists the error codes it can return, mapped to their HTTP status codes and grouped as response examples.
+Each definition lists the error codes it can return, mapped to their HTTP status codes and grouped as response examples. An exhausted query allowance returns HTTP 401 with error code 10000; the API does not use 429 or rate-limit headers.
 
 ## Usage
 
 Typically, you can import and use the API definition files in [Postman](https://www.postman.com/). Postman allows you to quickly set up an API request by importing an existing definition file. You can follow their tutorial (https://learning.postman.com/docs/getting-started/importing-and-exporting/importing-from-swagger/) to learn more on how to do it.
 
-The definitions are written to OpenAPI 3.2.1 and also work with the [Swagger Editor](https://editor.swagger.io/), [Redocly](https://redocly.com/) and any OpenAPI 3.2 compatible client or code generator.
+The definitions are written to OpenAPI 3.2.0 and work with [Postman](https://www.postman.com/), [Redocly](https://redocly.com/) and other clients and code generators that support OpenAPI 3.2.
 
 ## License
 

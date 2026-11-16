@@ -1,16 +1,16 @@
-openapi: 3.2.1
+openapi: 3.2.0
 info:
   title: IP2Location.io Bulk IP Geolocation API
   summary: Bulk IP Geolocation
   description: |-
     IP2Location.io Bulk IP Geolocation API looks up up to 1,000 IPv4 and IPv6 addresses in a single request and returns a record per address.
 
-    **Authentication.** Send your API key as a Bearer token in the `Authorization` header (recommended), or as the `key` query parameter. Without a key, the IP geolocation endpoint allows 1,000 requests per day from the same client IP. This endpoint requires a paid plan.
+    **Authentication.** Send your API key as a Bearer token in the `Authorization` header (recommended), or as the `key` query parameter. This endpoint requires a paid plan.
 
     **Request body.** Send a newline-separated list of addresses as `text/plain`, or a JSON array of addresses as `application/json`.
 
-    **Response.** With `format=json` the response is an object keyed by address. With `format=csv` it is a CSV table with one row per address and the requested fields as columns. Use `fields` to limit the columns; omitting it returns every field.
-  version: '1'
+    **Response.** With `format=json` the response is an object keyed by address. An empty request body returns an empty array. Invalid addresses are silently omitted from the response. With `format=csv` the response is a CSV table with a header row, one row per address, and the requested fields as columns. Use `fields` to limit the columns; omitting it returns every field.
+  version: 1.0.0
   termsOfService: https://www.ip2location.io/terms-of-service
   contact:
     name: IP2Location.io
@@ -47,10 +47,9 @@ paths:
           text/plain:
             schema:
               type: string
-              examples:
-                - |-
-                  1.1.1.1
-                  2.2.2.2
+              example: |-
+                1.1.1.1
+                2.2.2.2
             examples:
               Newline-separated:
                 value: |-
@@ -62,9 +61,9 @@ paths:
               items:
                 type: string
                 format: ip
-              examples:
-                - - 1.1.1.1
-                  - 2.2.2.2
+              example:
+                - 1.1.1.1
+                - 2.2.2.2
             examples:
               JSON array:
                 value:
@@ -72,7 +71,7 @@ paths:
                   - 2.2.2.2
       responses:
         '200':
-          description: One geolocation record per submitted address.
+          description: One geolocation record per valid submitted address. Invalid addresses are omitted. An empty request body returns an empty array.
           content:
             application/json:
               schema:
@@ -125,7 +124,7 @@ paths:
                       country:
                         name: Australia
                         alpha3_code: AUS
-                        numeric_code: 36
+                        numeric_code: '36'
                         demonym: Australians
                         flag: https://cdn.ip2location.io/assets/img/flags/au.png
                         capital: Canberra
@@ -161,7 +160,7 @@ paths:
                         abbreviation: AEST
                         dst_start_date: null
                         dst_end_date: null
-                        sunrise: 05:36
+                        sunrise: '05:36'
                         sunset: '18:26'
                       geotargeting:
                         metro: null
@@ -195,7 +194,7 @@ paths:
                       latitude: 37.005847
                       longitude: -79.770089
                       zip_code: '24146'
-                      time_zone: -05:00
+                      time_zone: '-05:00'
                       asn: '15519'
                       as: Oracle Svenska AB
                       isp: Oracle Svenska AB
@@ -212,9 +211,7 @@ paths:
             text/csv:
               schema:
                 type: string
-              example: |-
-                ip_address,country_code,country_name,region_name,city_name,latitude,longitude,zip_code,time_zone,asn,as,as_info.as_name,as_info.as_number,as_info.as_domain,as_info.as_cidr,as_info.as_usage_type,isp,domain,net_speed,idd_code,area_code,weather_station_code,weather_station_name,mcc,mnc,mobile_brand,elevation,usage_type,address_type,ads_category,ads_category_name,district,continent.name,continent.code,continent.hemisphere,continent.translation,country.name,country.alpha3_code,country.numeric_code,country.demonym,country.flag,country.capital,country.total_area,country.population,country.currency,country.language,country.tld,country.translation,region.name,region.code,region.translation,city.name,city.translation,time_zone_info.olson,time_zone_info.current_time,time_zone_info.gmt_offset,time_zone_info.is_dst,time_zone_info.abbreviation,time_zone_info.dst_start_date,time_zone_info.dst_end_date,time_zone_info.sunrise,time_zone_info.sunset,geotargeting.metro,is_proxy,fraud_score,proxy.last_seen,proxy.proxy_type,proxy.threat,proxy.provider,proxy.is_vpn,proxy.is_tor,proxy.is_data_center,proxy.is_public_proxy,proxy.is_web_proxy,proxy.is_web_crawler,proxy.is_ai_crawler,proxy.is_residential_proxy,proxy.is_spammer,proxy.is_scanner,proxy.is_botnet,proxy.is_bogon,proxy.is_consumer_privacy_network,proxy.is_enterprise_private_network
-                1.1.1.1,AU,Australia,Queensland,Brisbane,-27.46754,153.02809,4000,+10:00,13335,"CloudFlare Inc","APNIC and CloudFlare DNS Resolver Project",cloudflare.com,T1,61,07,ASXX0016,Brisbane,,,,16,CDN,A,Oceania,OC,south,east,en,Oceania,Australia,AUS,36,Australians,https://cdn.ip2location.io/assets/img/flags/au.png,Canberra,7741220,26461166,AUD,"Australian Dollar",$,EN,English,au,en,Australia,Queensland,AU-QLD,en,Queensland,Brisbane,en,Brisbane,Australia/Brisbane,2026-02-24T11:34:09+10:00,36000,,AEST,,,05:36,18:26,,,0,1,DCH,,,,,1,,,,,,,,,,,
+                description: CSV table with a header row and one row per valid address. Columns follow the requested fields.
         '401':
           description: Invalid API key or insufficient credit. This endpoint requires a paid plan.
           content:
@@ -257,10 +254,10 @@ components:
     key_required:
       name: key
       in: query
-      required: true
+      required: false
       schema:
         type: string
-      description: 'API key. Required unless the `Authorization: Bearer` header is sent. Get a free key at https://www.ip2location.io/sign-up.'
+      description: 'API key. Optional when the key is sent as an `Authorization: Bearer` token. Get a free key at https://www.ip2location.io/sign-up.'
     format_json_csv:
       name: format
       in: query
@@ -365,11 +362,11 @@ components:
             - proxy.is_bogon
             - proxy.is_consumer_privacy_network
             - proxy.is_enterprise_private_network
-        examples:
-          - - country_code
-            - country_name
-            - city_name
-            - is_proxy
+        example:
+          - country_code
+          - country_name
+          - city_name
+          - is_proxy
       description: Comma-separated list of fields to return. When omitted, all fields are returned.
   schemas:
     ASInfo:
@@ -379,18 +376,15 @@ components:
         as_number:
           type: string
           description: Autonomous system number (ASN).
-          examples:
-            - '15169'
+          example: '15169'
         as_name:
           type: string
           description: Autonomous system (AS) name.
-          examples:
-            - Google LLC
+          example: Google LLC
         as_domain:
           type: string
           description: Domain name of the AS registrant.
-          examples:
-            - google.com
+          example: google.com
         as_usage_type:
           type: string
           enum:
@@ -409,13 +403,11 @@ components:
             - RSV
             - ISP/MOB
           description: Usage type of the AS registrant.
-          examples:
-            - DCH
+          example: DCH
         as_cidr:
           type: string
           description: CIDR range for the whole AS.
-          examples:
-            - 8.8.8.0/24
+          example: 8.8.8.0/24
     Continent:
       type: object
       description: Continent details. Available on the Plus and Security plans.
@@ -423,8 +415,7 @@ components:
         name:
           type: string
           description: Continent name.
-          examples:
-            - North America
+          example: North America
         code:
           type: string
           enum:
@@ -436,8 +427,7 @@ components:
             - OC
             - SA
           description: Two-character continent code.
-          examples:
-            - NA
+          example: NA
         hemisphere:
           type: array
           description: The hemisphere where the country is located. The first item is the north/south hemisphere and the second item is the east/west hemisphere.
@@ -448,9 +438,9 @@ components:
               - south
               - east
               - west
-          examples:
-            - - north
-              - west
+          example:
+            - north
+            - west
         translation:
           type: object
           description: Translation of the name for the language requested with the `lang` parameter. Both values are null when no translation is available, for example for city names.
@@ -459,14 +449,12 @@ components:
               type:
                 - string
                 - 'null'
-              examples:
-                - ko
+              example: ko
             value:
               type:
                 - string
                 - 'null'
-              examples:
-                - 북아메리카
+              example: 북아메리카
     Country:
       type: object
       description: Country details. Available on the Plus and Security plans.
@@ -474,44 +462,38 @@ components:
         name:
           type: string
           description: Country name based on ISO 3166.
-          examples:
-            - United States of America
+          example: United States of America
         alpha3_code:
           type: string
           description: Three-character country code based on ISO 3166.
-          examples:
-            - USA
+          example: USA
         numeric_code:
-          type: integer
-          description: ISO 3166-1 numeric country code.
-          examples:
-            - 840
+          type:
+            - integer
+            - string
+          description: ISO 3166-1 numeric country code. The single-IP API returns an integer; the Bulk API returns the same value as a numeric string.
+          example: 840
         demonym:
           type: string
           description: Native of the country.
-          examples:
-            - Americans
+          example: Americans
         flag:
           type: string
           format: uri
           description: URL of the country flag image.
-          examples:
-            - https://cdn.ip2location.io/assets/img/flags/us.png
+          example: https://cdn.ip2location.io/assets/img/flags/us.png
         capital:
           type: string
           description: Capital of the country.
-          examples:
-            - Washington, D.C.
+          example: Washington, D.C.
         total_area:
           type: number
           description: Total area in square kilometres.
-          examples:
-            - 9826675
+          example: 9826675
         population:
           type: integer
           description: Population of the country.
-          examples:
-            - 339665118
+          example: 339665118
         currency:
           type: object
           description: Currency of the country.
@@ -519,18 +501,15 @@ components:
             code:
               type: string
               description: ISO 4217 currency code.
-              examples:
-                - USD
+              example: USD
             name:
               type: string
               description: Currency name.
-              examples:
-                - United States Dollar
+              example: United States Dollar
             symbol:
               type: string
               description: Currency symbol.
-              examples:
-                - $
+              example: $
         language:
           type: object
           description: Primary language of the country.
@@ -538,18 +517,15 @@ components:
             code:
               type: string
               description: Language code.
-              examples:
-                - EN
+              example: EN
             name:
               type: string
               description: Language name.
-              examples:
-                - English
+              example: English
         tld:
           type: string
           description: Country-code top-level domain.
-          examples:
-            - us
+          example: us
         translation:
           type: object
           description: Translation of the name for the language requested with the `lang` parameter. Both values are null when no translation is available, for example for city names.
@@ -558,14 +534,12 @@ components:
               type:
                 - string
                 - 'null'
-              examples:
-                - ko
+              example: ko
             value:
               type:
                 - string
                 - 'null'
-              examples:
-                - 북아메리카
+              example: 북아메리카
     Region:
       type: object
       description: Region details. Available on the Plus and Security plans.
@@ -573,13 +547,11 @@ components:
         name:
           type: string
           description: Region or state name.
-          examples:
-            - California
+          example: California
         code:
           type: string
           description: ISO 3166-2 code.
-          examples:
-            - US-CA
+          example: US-CA
         translation:
           type: object
           description: Translation of the name for the language requested with the `lang` parameter. Both values are null when no translation is available, for example for city names.
@@ -588,14 +560,12 @@ components:
               type:
                 - string
                 - 'null'
-              examples:
-                - ko
+              example: ko
             value:
               type:
                 - string
                 - 'null'
-              examples:
-                - 북아메리카
+              example: 북아메리카
     City:
       type: object
       description: City details. Available on the Plus and Security plans.
@@ -603,8 +573,7 @@ components:
         name:
           type: string
           description: City name.
-          examples:
-            - Mountain View
+          example: Mountain View
         translation:
           type: object
           description: Translation of the name for the language requested with the `lang` parameter. Both values are null when no translation is available, for example for city names.
@@ -613,14 +582,12 @@ components:
               type:
                 - string
                 - 'null'
-              examples:
-                - ko
+              example: ko
             value:
               type:
                 - string
                 - 'null'
-              examples:
-                - 북아메리카
+              example: 북아메리카
     TimeZoneInfo:
       type: object
       description: Detailed time zone information. Available on the Plus and Security plans.
@@ -628,55 +595,46 @@ components:
         olson:
           type: string
           description: Time zone in Olson format.
-          examples:
-            - America/Los_Angeles
+          example: America/Los_Angeles
         current_time:
           type: string
           format: date-time
           description: Current local time in ISO 8601 format.
-          examples:
-            - '2025-07-16T19:06:49-07:00'
+          example: '2025-11-16T12:00:00-08:00'
         gmt_offset:
           type: integer
           description: GMT offset in seconds.
-          examples:
-            - -25200
+          example: -28800
         is_dst:
           type: boolean
           description: Whether the time zone is currently observing daylight saving time.
-          examples:
-            - true
+          example: false
         abbreviation:
           type: string
           description: Time zone abbreviation, for example EST or PDT.
-          examples:
-            - PDT
+          example: PST
         dst_start_date:
           type:
             - string
             - 'null'
           format: date
           description: Date on which daylight saving time starts, or null in a time zone without DST.
-          examples:
-            - '2025-03-09'
+          example: '2026-03-08'
         dst_end_date:
           type:
             - string
             - 'null'
           format: date
           description: Date on which daylight saving time ends, or null in a time zone without DST.
-          examples:
-            - '2025-11-02'
+          example: '2026-11-01'
         sunrise:
           type: string
           description: Sunrise time in local time (hh:mm).
-          examples:
-            - 06:00
+          example: '06:45'
         sunset:
           type: string
           description: Sunset time in local time (hh:mm).
-          examples:
-            - '20:29'
+          example: '16:55'
     Geotargeting:
       type: object
       description: Geotargeting data. Available on the Plus and Security plans.
@@ -686,8 +644,7 @@ components:
             - string
             - 'null'
           description: Metro code based on the ZIP or postal code, or null when the address is outside a metered area.
-          examples:
-            - '807'
+          example: '807'
     Proxy:
       type: object
       description: Proxy and threat details. The full object is available on the Security plan; lower plans only return `is_proxy`.
@@ -695,8 +652,7 @@ components:
         last_seen:
           type: integer
           description: Number of days since the proxy was last seen.
-          examples:
-            - 13
+          example: 13
         proxy_type:
           type: string
           enum:
@@ -711,94 +667,71 @@ components:
             - CPN
             - EPN
           description: Type of proxy.
-          examples:
-            - DCH
+          example: DCH
         threat:
           type: string
-          enum:
-            - SPAM
-            - SCANNER
-            - BOTNET
-            - BOGON
-            - '-'
-          description: Security threat reported for the address.
-          examples:
-            - '-'
+          description: 'Security threats reported for the address as a slash-separated list: SPAM, SCANNER, BOTNET and BOGON. "-" when none apply.'
+          example: '-'
         provider:
           type: string
           description: Name of the VPN provider, when available.
-          examples:
-            - '-'
+          example: '-'
         is_vpn:
           type: boolean
           description: Anonymising VPN service.
-          examples:
-            - false
+          example: false
         is_tor:
           type: boolean
           description: Tor exit node.
-          examples:
-            - false
+          example: false
         is_data_center:
           type: boolean
           description: Hosting provider, data centre or content delivery network.
-          examples:
-            - true
+          example: true
         is_public_proxy:
           type: boolean
           description: Public proxy.
-          examples:
-            - false
+          example: false
         is_web_proxy:
           type: boolean
           description: Web proxy.
-          examples:
-            - false
+          example: false
         is_web_crawler:
           type: boolean
           description: Search engine robot.
-          examples:
-            - false
+          example: false
         is_ai_crawler:
           type: boolean
           description: Crawler operated by an AI company to collect training data or support retrieval.
-          examples:
-            - false
+          example: false
         is_residential_proxy:
           type: boolean
           description: Residential proxy.
-          examples:
-            - false
+          example: false
         is_spammer:
           type: boolean
           description: Email or forum spammer.
-          examples:
-            - false
+          example: false
         is_scanner:
           type: boolean
           description: Network security scanner.
-          examples:
-            - false
+          example: false
         is_botnet:
           type: boolean
           description: Malware-infected device.
-          examples:
-            - false
+          example: false
         is_bogon:
           type: boolean
           description: Unassigned or illegitimate address announced via BGP.
-          examples:
-            - false
+          example: false
         is_consumer_privacy_network:
           type: boolean
           description: Consumer privacy network.
-          examples:
-            - false
+          example: false
         is_enterprise_private_network:
           type: boolean
           description: Enterprise private network.
-          examples:
-            - false
+          example: false
     ErrorResponse:
       type: object
       description: Error envelope returned for every failed request.
@@ -814,18 +747,21 @@ components:
             error_code:
               type: integer
               description: Numeric error code, unique within the API.
-              examples:
-                - 10001
+              example: 10001
             error_message:
               type: string
               description: Human-readable error message.
-              examples:
-                - Invalid IP address.
+              example: Invalid IP address.
     BulkIPGeolocationResponse:
-      type: object
-      description: Map of IP address to geolocation record. Each key is a submitted address; the value contains the fields available on your plan.
-      additionalProperties:
-        $ref: '#/components/schemas/BulkIPGeolocationRecord'
+      description: Map of IP address to geolocation record. Each key is a submitted address and the value contains the fields available on your plan. Invalid addresses are omitted. An empty request body returns an empty array.
+      oneOf:
+        - type: object
+          additionalProperties:
+            $ref: '#/components/schemas/BulkIPGeolocationRecord'
+        - type: array
+          items: {}
+          maxItems: 0
+          description: Returned when the request body contains no addresses.
     BulkIPGeolocationRecord:
       type: object
       description: Geolocation record for one of the submitted addresses.
@@ -833,70 +769,57 @@ components:
         country_code:
           type: string
           description: Two-character country code based on ISO 3166.
-          examples:
-            - US
+          example: US
         country_name:
           type: string
           description: Country name based on ISO 3166.
-          examples:
-            - United States of America
+          example: United States of America
         region_name:
           type: string
           description: Region or state name.
-          examples:
-            - California
+          example: California
         district:
           type: string
           description: District or county name. Available on the Security plan.
-          examples:
-            - Santa Clara County
+          example: Santa Clara County
         city_name:
           type: string
           description: City name.
-          examples:
-            - Mountain View
+          example: Mountain View
         latitude:
           type: number
           description: City latitude. Defaults to the capital city latitude when the city is unknown.
-          examples:
-            - 37.38605
+          example: 37.38605
         longitude:
           type: number
           description: City longitude. Defaults to the capital city longitude when the city is unknown.
-          examples:
-            - -122.08385
+          example: -122.08385
         zip_code:
           type: string
           description: ZIP or postal code.
-          examples:
-            - '94035'
+          example: '94043'
         time_zone:
           type: string
           description: UTC time zone with daylight saving time applied.
-          examples:
-            - -07:00
+          example: '-07:00'
         asn:
           type: string
           description: Autonomous system number (ASN).
-          examples:
-            - '15169'
+          example: '15169'
         as:
           type: string
           description: Autonomous system (AS) name.
-          examples:
-            - Google LLC
+          example: Google LLC
         as_info:
           $ref: '#/components/schemas/ASInfo'
         isp:
           type: string
           description: Internet Service Provider or company name. Available on the Starter plan and above.
-          examples:
-            - Google LLC
+          example: Google LLC
         domain:
           type: string
           description: Internet domain name associated with the IP address range. Available on the Starter plan and above.
-          examples:
-            - google.com
+          example: google.com
         net_speed:
           type: string
           enum:
@@ -906,54 +829,45 @@ components:
             - T1
             - SAT
           description: Internet connection type. DIAL = dial-up, DSL = broadband/cable/fibre/mobile, COMP = corporate, T1 = data centre/transit, SAT = satellite. Available on the Starter plan and above.
-          examples:
-            - T1
+          example: T1
         idd_code:
           type: string
           description: IDD prefix used to call the city from another country. Available on the Starter plan and above.
-          examples:
-            - '1'
+          example: '1'
         area_code:
           type: string
           description: Area code for calls between cities. Available on the Starter plan and above.
-          examples:
-            - '650'
+          example: '650'
         weather_station_code:
           type: string
           description: Code of the nearest weather observation station. Available on the Starter plan and above.
-          examples:
-            - USCA0746
+          example: USCA0746
         weather_station_name:
           type: string
           description: Name of the nearest weather observation station. Available on the Starter plan and above.
-          examples:
-            - Mountain View
+          example: Mountain View
         mcc:
           type:
             - string
             - 'null'
-          description: Mobile Country Code (ITU E.212), or null when unknown. Available on the Plus plan and above.
-          examples:
-            - '-'
+          description: Mobile Country Code (ITU E.212). "-" in the single-IP API and null in the Bulk API when unknown. Available on the Plus plan and above.
+          example: '-'
         mnc:
           type:
             - string
             - 'null'
-          description: Mobile Network Code, or null when unknown. Available on the Plus plan and above.
-          examples:
-            - '-'
+          description: Mobile Network Code. "-" in the single-IP API and null in the Bulk API when unknown. Available on the Plus plan and above.
+          example: '-'
         mobile_brand:
           type:
             - string
             - 'null'
-          description: Commercial brand associated with the mobile carrier, or null when unknown. Available on the Plus plan and above.
-          examples:
-            - '-'
+          description: Commercial brand associated with the mobile carrier. "-" in the single-IP API and null in the Bulk API when unknown. Available on the Plus plan and above.
+          example: '-'
         elevation:
           type: number
           description: Average height of the city above sea level, in metres. Available on the Starter plan and above.
-          examples:
-            - 32
+          example: 32
         usage_type:
           type: string
           enum:
@@ -972,8 +886,7 @@ components:
             - RSV
             - ISP/MOB
           description: Usage type classification of the ISP or company. Available on the Starter plan and above.
-          examples:
-            - DCH
+          example: DCH
         address_type:
           type: string
           enum:
@@ -982,18 +895,15 @@ components:
             - Multicast
             - Broadcast
           description: IP address type. Available on the Plus plan and above.
-          examples:
-            - Anycast
+          example: Anycast
         ads_category:
           type: string
           description: Domain category code based on the IAB Tech Lab Content Taxonomy v3.1. Available on the Security plan.
-          examples:
-            - '622'
+          example: '622'
         ads_category_name:
           type: string
           description: Domain category name based on the IAB Tech Lab Content Taxonomy v3.1, or "-" when unclassified. Available on the Security plan.
-          examples:
-            - Web Hosting
+          example: Web Hosting
         continent:
           $ref: '#/components/schemas/Continent'
         country:
@@ -1009,14 +919,12 @@ components:
         is_proxy:
           type: boolean
           description: Whether the address belongs to a known proxy, VPN, Tor exit node or another masking service.
-          examples:
-            - false
+          example: false
         fraud_score:
           type: integer
           minimum: 0
           maximum: 99
           description: IP2Proxy fraud score from 0 to 99. A higher score means a greater likelihood of fraudulent activity. Available on the Security plan.
-          examples:
-            - 0
+          example: 0
         proxy:
           $ref: '#/components/schemas/Proxy'
