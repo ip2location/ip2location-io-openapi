@@ -1,0 +1,49 @@
+name: Lint OpenAPI definitions
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install validator
+        run: pip install "openapi-spec-validator>=0.8.2" pyyaml
+      - name: Validate JSON and compare with YAML
+        run: |
+          python - <<'PY'
+          import glob
+          import io
+          import json
+          import os
+          import sys
+
+          import yaml
+          from openapi_spec_validator import validate
+
+          failed = False
+          for path in sorted(glob.glob("json/*.json")):
+              name = os.path.splitext(os.path.basename(path))[0]
+              with io.open(path, encoding="utf-8") as handle:
+                  spec = json.load(handle)
+              try:
+                  validate(spec)
+              except Exception as exc:
+                  print(f"INVALID {path}: {exc}")
+                  failed = True
+              with io.open(f"yaml/{name}.yaml", encoding="utf-8") as handle:
+                  mirrored = yaml.safe_load(handle)
+              if mirrored != spec:
+                  print(f"OUT OF SYNC {path} and yaml/{name}.yaml")
+                  failed = True
+              else:
+                  print(f"OK {path}")
+          sys.exit(1 if failed else 0)
+          PY
+      - name: Lint with Redocly
+        run: npx --yes @redocly/cli@latest lint json/*.json
