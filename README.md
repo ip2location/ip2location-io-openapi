@@ -65,10 +65,92 @@ Each definition lists the error codes it can return, mapped to their HTTP status
 
 ## Usage
 
-Typically, you can import and use the API definition files in [Postman](https://www.postman.com/). Postman allows you to quickly set up an API request by importing an existing definition file. You can follow their tutorial (https://learning.postman.com/docs/getting-started/importing-and-exporting/importing-from-swagger/) to learn more on how to do it.
+### Import into Postman
 
-The definitions are written to OpenAPI 3.2.0 and work with [Postman](https://www.postman.com/), [Redocly](https://redocly.com/) and other clients and code generators that support OpenAPI 3.2.
+[Postman](https://www.postman.com/) supports importing OpenAPI definitions to create an API collection.
+
+1. Open Postman and select **Import**.
+2. Choose **File** and upload a definition from this repository's `json/` or `yaml/` directory.
+3. Review the imported requests and configure the required API key and parameters.
+4. Select an operation and send a test request.
+
+See the [Postman guide to importing API specifications](https://learning.postman.com/docs/getting-started/importing-and-exporting/importing-from-swagger/) for more information.
+
+### View a Definition in Swagger Editor
+
+You can also use [Swagger Editor](https://editor.swagger.io/) to inspect an OpenAPI definition:
+
+1. Open Swagger Editor.
+2. Paste or import the contents of a JSON or YAML definition file.
+3. Review the operations, parameters, schemas, and any validation messages.
+
+Swagger Editor is useful for exploring a definition before integrating it into an application. Its displayed operations and authentication requirements are determined by the imported file.
+
+### Explore Documentation with Redocly
+
+[Redocly](https://redocly.com/) provides tools for viewing, validating, and publishing OpenAPI reference documentation.
+
+1. Choose a definition from the `json/` or `yaml/` directory.
+2. Open the file using a Redocly tool that supports the specification version.
+3. Browse the endpoints, request parameters, authentication requirements, response schemas, and examples.
+
+**Compatibility:** These repository definitions use OpenAPI 3.2.0. Check that your Redocly tool or version supports OpenAPI 3.2 before importing them.
+
+### Use with OpenAPI Tooling
+
+OpenAPI-compatible tools may support generating client code, producing reference documentation, or validating specifications. Download the appropriate definition and follow the instructions for your chosen tool.
+
+> **Note:** Generated clients and documentation depend on the capabilities of the tool and the contents of the selected specification. Review and test generated code before using it in production.
+
+## API Access and Authentication
+
+IP2Location.io offers IP intelligence services with features and query limits that vary by API and subscription plan.
+
+- **API key:** Configure credentials as required by the operation or imported specification. Do not commit real keys to source control.
+- **Keyless access:** Certain IP geolocation REST requests may support keyless access; this does not imply that every operation in the repository works without authentication.
+- **Plan-dependent fields:** Not all response fields are available on every subscription plan or for every IP address.
+- **Rate limits and quotas:** Check the current [API pricing and plans](https://www.ip2location.io/pricing) before building high-volume workflows.
+
+See the [official API documentation](https://www.ip2location.io/ip2location-documentation) for current authentication parameters and service behavior.
+
+## Common Use Cases
+
+| Use case | How the definitions help |
+|---|---|
+| API testing | Import operations into Postman and test requests and responses. |
+| API exploration | Inspect parameters and response schemas before writing integration code. |
+| Client development | Use compatible OpenAPI tools as a starting point for generated clients. |
+| API documentation | Render supported definitions in an OpenAPI documentation viewer. |
+| Integration review | Compare application requests against the documented API contract. |
+
+## Troubleshooting
+
+| Issue | Suggested action |
+|---|---|
+| A definition fails to import | Try the alternate JSON/YAML representation and inspect the tool's validation message. |
+| An operation is missing | Confirm that you imported the definition for the intended API. |
+| Authentication fails | Check the API key and the authentication configuration for that operation. |
+| The response contains fewer fields than expected | Confirm your API plan and whether the queried IP has data for those fields. |
+| A generated client fails | Check the generator's OpenAPI support and review the generated request and authentication handling. |
+
+If you believe a specification is incorrect, open an issue with the **filename, operation, expected behavior, and observed behavior**.
+
+## Related IP2Location Products
+
+| Product | Purpose |
+|---|---|
+| [IP2Location.io](https://www.ip2location.io/) | Hosted IP geolocation, ASN, and network intelligence APIs. |
+| [IP2Location LITE](https://www.ip2location.com/database/lite) | Free downloadable IP geolocation and ASN databases for offline use. |
+| [IP2Location Database](https://www.ip2location.com/database/ip2location) | Commercial offline IP geolocation databases. |
+| [IP2Proxy](https://www.ip2location.com/database/proxy) | IP proxy, VPN, TOR and anonymizer intelligence. |
+| [IP2WHOIS](https://www.ip2whois.com/) | Domain WHOIS lookup services. |
+
+## Support
+
+- [IP2Location.io API documentation](https://www.ip2location.io/ip2location-documentation)
+- [API plans and pricing](https://www.ip2location.io/pricing)
+- [Report issues or request features](https://github.com/ip2location/ip2location-io-openapi/issues)
 
 ## License
 
-MIT license, refer to the LICENSE file.
+Licensed under the **MIT License**. See [LICENSE](https://github.com/ip2location/ip2location-io-openapi/blob/main/LICENSE).
